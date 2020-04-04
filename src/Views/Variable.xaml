@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="EnvironmentControl.Views.Variable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <TextBlock Text="{Binding Name}"/>
+        <ListBox ItemsSource="{Binding Values}" SelectedItem="{Binding SelectedValue}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}"/>
+                        <TextBlock Text="{Binding ActualValue}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</UserControl>

@@ -2,8 +2,8 @@
 
 namespace EnvironmentControl.Services {
     public interface IService {
-        void SetVariable(string value);
-        string GetVariable();
-        Task<VariableValue[]> LoadItems();
+        void SetVariable(string name, string value);
+        string GetVariable(string name);
+        Task<Variable[]> LoadItems();
     }
 }

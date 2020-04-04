@@ -10,48 +10,52 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Load_saved_values_on_load() {
             var svc = Substitute.For<IService>();
-            svc.LoadItems().Returns(new[] { new VariableValue("a"), new VariableValue("b") });
+            svc.LoadItems().Returns(Variables());
             var vm = new MainViewModel(svc);
 
             vm.Load.Execute(null);
 
-            vm.Items.Should().HaveCount(2);
-            vm.Items[0].Should().BeEquivalentTo(new VariableValue("a"));
-            vm.Items[1].Should().BeEquivalentTo(new VariableValue("b"));
+            vm.Items.Should().HaveCount(1);
+            vm.Items[0].Values[0].Should().BeEquivalentTo(new Value("first", "a"));
+            vm.Items[0].Values[1].Should().BeEquivalentTo(new Value("second", "b"));
         }
 
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
             var svc = Substitute.For<IService>();
+            svc.LoadItems().Returns(Variables());
             var vm = new MainViewModel(svc);
+            vm.Load.Execute(null);
 
-            vm.SelectedVariableValue = new VariableValue("current value");
+            vm.Items[0].SelectedValue = new Value("title", "current value");
 
-            svc.Received().SetVariable("current value");
+            svc.Received().SetVariable("myVar", "current value");
         }
 
         [Fact]
         public void Select_the_current_value_on_load() {
             var svc = Substitute.For<IService>();
-            svc.LoadItems().Returns(new[] { new VariableValue("a"), new VariableValue("b") });
-            svc.GetVariable().Returns("b");
+            svc.LoadItems().Returns(Variables());
+            svc.GetVariable("myVar").Returns("b");
             var vm = new MainViewModel(svc);
 
             vm.Load.Execute(null);
 
-            vm.SelectedVariableValue.Value.Should().Be("b");
+            vm.Items[0].SelectedValue.ActualValue.Should().Be("b");
         }
 
         [Fact]
         public void Select_nothing_if_the_current_value_is_not_available() {
             var svc = Substitute.For<IService>();
-            svc.LoadItems().Returns(new[] { new VariableValue("a"), new VariableValue("b") });
-            svc.GetVariable().Returns("c");
+            svc.LoadItems().Returns(Variables());
+            svc.GetVariable("myVar").Returns("c");
             var vm = new MainViewModel(svc);
 
             vm.Load.Execute(null);
 
-            vm.SelectedVariableValue.Should().BeNull();
+            vm.Items[0].SelectedValue.Should().BeNull();
         }
+
+        private Variable[] Variables() => new[] {new Variable("myVar", new[] {new Value("first", "a"), new Value("second", "b")})};
     }
 }

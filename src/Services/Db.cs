@@ -1,5 +1,5 @@
 ﻿namespace EnvironmentControl.Services {
     public class Db {
-        public VariableValue[] Values { get; set; }
+        public Variable[] Variables { get; set; }
     }
 }

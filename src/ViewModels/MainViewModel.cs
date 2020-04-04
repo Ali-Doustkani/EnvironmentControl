@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using EnvironmentControl.Common;
@@ -15,21 +16,17 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand Load { get; }
 
-        public VariableValue[] Items { get; private set; }
-
-        private VariableValue _selectedVariableValue;
-        public VariableValue SelectedVariableValue {
-            get => _selectedVariableValue;
-            set {
-                _selectedVariableValue = value;
-                _service.SetVariable(value.Value);
-            }
-        }
+        public VariableViewModel[] Items { get; private set; }
 
         private async Task DoLoad() {
-            Items = await _service.LoadItems();
-            _selectedVariableValue = Items.SingleOrDefault(x => x.Value == _service.GetVariable());
-            Notify(nameof(Items), nameof(SelectedVariableValue));
+            var items = new List<VariableViewModel>();
+            var variables = await _service.LoadItems();
+            foreach (var variable in variables) {
+                var selectedValue = variable.Values.SingleOrDefault(x => x.ActualValue == _service.GetVariable(variable.Name));
+                items.Add(new VariableViewModel(_service, variable, selectedValue));
+            }
+            Items = items.ToArray();
+            Notify(nameof(Items));
         }
     }
 }
