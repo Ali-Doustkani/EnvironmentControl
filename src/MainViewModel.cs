@@ -31,6 +31,7 @@ namespace EnvironmentControl {
             Items = await _service.LoadItems();
             _selectedVariableValue = Items.SingleOrDefault(x => x.Value == _service.GetVariable());
             OnPropertyChanged(nameof(Items));
+            OnPropertyChanged(nameof(SelectedVariableValue));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
