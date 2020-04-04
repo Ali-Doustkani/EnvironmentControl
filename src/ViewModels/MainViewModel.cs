@@ -1,12 +1,11 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using EnvironmentControl.Annotations;
+using EnvironmentControl.Common;
+using EnvironmentControl.Services;
 
-namespace EnvironmentControl {
-    public class MainViewModel : INotifyPropertyChanged {
+namespace EnvironmentControl.ViewModels {
+    public class MainViewModel : ViewModel {
         public MainViewModel(IService service) {
             _service = service;
             Load = new RelayCommand(DoLoad);
@@ -30,15 +29,7 @@ namespace EnvironmentControl {
         private async Task DoLoad() {
             Items = await _service.LoadItems();
             _selectedVariableValue = Items.SingleOrDefault(x => x.Value == _service.GetVariable());
-            OnPropertyChanged(nameof(Items));
-            OnPropertyChanged(nameof(SelectedVariableValue));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Notify(nameof(Items), nameof(SelectedVariableValue));
         }
     }
 }

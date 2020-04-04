@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace EnvironmentControl {
+namespace EnvironmentControl.Services {
     public class Service : IService {
         public void SetVariable(string value) {
             Environment.SetEnvironmentVariable("MY_VAR", value, EnvironmentVariableTarget.Machine);

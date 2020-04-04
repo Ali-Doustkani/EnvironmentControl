@@ -1,4 +1,4 @@
-﻿namespace EnvironmentControl {
+﻿namespace EnvironmentControl.Services {
     public class VariableValue {
         public VariableValue(string value) {
             Value = value;

@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using EnvironmentControl.Services;
+using EnvironmentControl.ViewModels;
+using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace EnvironmentControl.Tests {
+namespace EnvironmentControl.Tests.ViewModels {
     public class MainViewModelTests {
 
         [Fact]

@@ -1,11 +1,11 @@
 ﻿<Application x:Class="EnvironmentControl.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:EnvironmentControl"
-             StartupUri="MainWindow.xaml">
+             xmlns:viewModels="clr-namespace:EnvironmentControl.ViewModels"
+             StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
          <ResourceDictionary>
-             <local:ViewModelLocator x:Key="locator"/>
+             <viewModels:ViewModelLocator x:Key="locator"/>
          </ResourceDictionary>
     </Application.Resources>
 </Application>

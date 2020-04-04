@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace EnvironmentControl {
+namespace EnvironmentControl.Common {
     public class RelayCommand : ICommand {
         public RelayCommand(Func<Task> todo) {
             _todo = todo;
