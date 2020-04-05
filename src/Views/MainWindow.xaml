@@ -8,8 +8,10 @@
         AllowsTransparency="True"
         Background="{StaticResource AppBackground}"
         Width="300"
+        MinHeight="300"
+        SizeToContent="Height"
         MouseDown="MainWindow_OnMouseDown"
-        Loaded="MainWindow_OnLoaded"
+        Loaded="MainWindow_OnLoaded" 
         Closing="MainWindow_OnClosing">
     <Window.Resources>
         <Style TargetType="Button">
