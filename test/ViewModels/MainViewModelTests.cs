@@ -57,19 +57,14 @@ namespace EnvironmentControl.Tests.ViewModels {
         }
 
         [Fact]
-        public void Set_sizes_when_loading() {
+        public void Set_coordination_when_loading() {
             var svc = Substitute.For<IService>();
             var vm = new MainViewModel(svc);
 
-            svc.Load().Returns(LoadResult.Successful(new Variable[0], 0, 0));
+            svc.Load().Returns(LoadResult.Successful(new Variable[0], 10, 20));
             vm.Load.Execute(null);
-            vm.Width.Should().Be(300);
-            vm.Height.Should().Be(300);
-
-            svc.Load().Returns(LoadResult.Successful(new Variable[0], 100, 300));
-            vm.Load.Execute(null);
-            vm.Width.Should().Be(100);
-            vm.Height.Should().Be(300);
+            vm.Top.Should().Be(10);
+            vm.Left.Should().Be(20);
         }
 
         private LoadResult Result() => LoadResult.Successful(
