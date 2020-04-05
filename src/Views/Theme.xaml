@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="AppBackground" Color="#1e1e1e" Opacity="0.9"/>
+    <SolidColorBrush x:Key="ValueBackground" Color="#333745"/>
+    <SolidColorBrush x:Key="ValueBackgroundOnSelection" Color="#464b5e"/>
+    <SolidColorBrush x:Key="ValueBackgroundOnMouseOver" Color="#464b5e"/>
+    <SolidColorBrush x:Key="ValueTitleColor" Color="#fe5f55"/>
+    <SolidColorBrush x:Key="ValueValueColor" Color="White"/>
+    <SolidColorBrush x:Key="VariableColor" Color="#eef5db"/>
+</ResourceDictionary>

@@ -4,16 +4,20 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:views="clr-namespace:EnvironmentControl.Views"
         DataContext="{Binding Source={StaticResource locator}, Path=MainViewModel}"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStyle="None"
+        Title="MainWindow" Height="700" Width="300"
+        AllowsTransparency="True"
+        Background="{StaticResource AppBackground}"
+        MouseDown="MainWindow_OnMouseDown">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Load}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <ItemsControl ItemsSource="{Binding Items}">
+    <ItemsControl Padding="10" ItemsSource="{Binding Items}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <views:Variable Height="100"/>
+                <views:Variable/>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
