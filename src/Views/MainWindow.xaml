@@ -1,19 +1,16 @@
 ﻿<Window x:Class="EnvironmentControl.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:views="clr-namespace:EnvironmentControl.Views"
         DataContext="{Binding Source={StaticResource locator}, Path=MainViewModel}"
+        Title="Environment Control" 
         WindowStyle="None"
-        Title="MainWindow" Height="700" Width="300"
         AllowsTransparency="True"
         Background="{StaticResource AppBackground}"
-        MouseDown="MainWindow_OnMouseDown">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding Load}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+        Width="300"
+        MouseDown="MainWindow_OnMouseDown"
+        Loaded="MainWindow_OnLoaded"
+        Closing="MainWindow_OnClosing">
     <ItemsControl Padding="10" ItemsSource="{Binding Items}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
