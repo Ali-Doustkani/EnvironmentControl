@@ -33,11 +33,7 @@ namespace EnvironmentControl.ViewModels {
             var result = await _service.Load();
             Top = result.Top;
             Left = result.Left;
-            foreach (var variable in result.Variables) {
-                var selectedValue = variable.Values.SingleOrDefault(x => x.ActualValue == _service.GetVariable(variable.Name));
-                items.Add(new VariableViewModel(_service, variable, selectedValue));
-            }
-            Items = items.ToArray();
+            Items = result.Variables.Select(x => new VariableViewModel(_service, x)).ToArray();
             Notify(nameof(Items), nameof(Top), nameof(Left));
         }
 
