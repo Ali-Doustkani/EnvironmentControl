@@ -7,6 +7,7 @@
     <SolidColorBrush x:Key="ValueTitleColor" Color="#fe5f55"/>
     <SolidColorBrush x:Key="ValueValueColor" Color="White"/>
     <SolidColorBrush x:Key="VariableColor" Color="#eef5db"/>
-    <SolidColorBrush x:Key="CloseBackground" Color="Gray" Opacity="0.5"/>
+    <SolidColorBrush x:Key="SimpleBackground" Color="Gray" Opacity="0.5"/>
     <SolidColorBrush x:Key="CloseBackgroundOnOver" Color="#e04f60" Opacity="0.5"/>
+    <SolidColorBrush x:Key="MoreBackgroundOnOver" Color="LightSkyBlue" Opacity="0.5"/>
 </ResourceDictionary>

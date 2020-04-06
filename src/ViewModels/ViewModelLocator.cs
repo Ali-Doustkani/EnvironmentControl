@@ -2,6 +2,6 @@
 
 namespace EnvironmentControl.ViewModels {
     public class ViewModelLocator {
-        public MainViewModel MainViewModel => new MainViewModel(new Service());
+        public MainViewModel MainViewModel => new MainViewModel(new Service(), new DialogService());
     }
 }

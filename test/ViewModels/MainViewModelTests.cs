@@ -10,8 +10,9 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Load_saved_values_on_load() {
             var svc = Substitute.For<IService>();
+            var dlg = Substitute.For<IDialogService>();
             svc.Load().Returns(Result());
-            var vm = new MainViewModel(svc);
+            var vm = new MainViewModel(svc, dlg);
 
             vm.Load.Execute(null);
 
@@ -23,8 +24,9 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
             var svc = Substitute.For<IService>();
+            var dlg = Substitute.For<IDialogService>();
             svc.Load().Returns(Result());
-            var vm = new MainViewModel(svc);
+            var vm = new MainViewModel(svc, dlg);
             vm.Load.Execute(null);
 
             vm.Items[0].SelectedValue = new Value("title", "current value");
@@ -35,9 +37,10 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Select_the_current_value_on_load() {
             var svc = Substitute.For<IService>();
+            var dlg = Substitute.For<IDialogService>();
             svc.Load().Returns(Result());
             svc.GetVariable("myVar").Returns("b");
-            var vm = new MainViewModel(svc);
+            var vm = new MainViewModel(svc, dlg);
 
             vm.Load.Execute(null);
 
@@ -47,9 +50,10 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Select_nothing_if_the_current_value_is_not_available() {
             var svc = Substitute.For<IService>();
+            var dlg = Substitute.For<IDialogService>();
             svc.Load().Returns(Result());
             svc.GetVariable("myVar").Returns("c");
-            var vm = new MainViewModel(svc);
+            var vm = new MainViewModel(svc, dlg);
 
             vm.Load.Execute(null);
 
@@ -59,7 +63,8 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Set_coordination_when_loading() {
             var svc = Substitute.For<IService>();
-            var vm = new MainViewModel(svc);
+            var dlg = Substitute.For<IDialogService>();
+            var vm = new MainViewModel(svc, dlg);
 
             svc.Load().Returns(LoadResult.Successful(new Variable[0], 10, 20));
             vm.Load.Execute(null);

@@ -7,16 +7,19 @@ using EnvironmentControl.Services;
 
 namespace EnvironmentControl.ViewModels {
     public class MainViewModel : ViewModel {
-        public MainViewModel(IService service) {
+        public MainViewModel(IService service, IDialogService dialog) {
             _service = service;
+            _dialog = dialog;
             Load = new RelayCommand(DoLoad);
             Closing = new RelayCommand(DoClosing);
+            Close = new RelayCommand(_dialog.CloseWindow);
         }
 
         private readonly IService _service;
+        private readonly IDialogService _dialog;
 
         public ICommand Load { get; }
-
+        public ICommand Close { get; }
         public ICommand Closing { get; }
 
         public VariableViewModel[] Items { get; private set; }
