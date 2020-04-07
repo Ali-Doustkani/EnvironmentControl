@@ -1,4 +1,4 @@
-﻿namespace EnvironmentControl.Services {
+﻿namespace EnvironmentControl.Domain {
     public class Value {
         public Value(string title, string actualValue) {
             Title = title;

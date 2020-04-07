@@ -1,22 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using EnvironmentControl.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using EnvironmentControl.Common;
-using EnvironmentControl.Services;
 
 namespace EnvironmentControl.ViewModels {
     public class MainViewModel : ViewModel {
-        public MainViewModel(IService service, IDialogService dialog) {
-            _service = service;
-            _dialog = dialog;
+        public MainViewModel() {
             Load = new RelayCommand(DoLoad);
             Closing = new RelayCommand(DoClosing);
-            Close = new RelayCommand(_dialog.CloseWindow);
+            Close = new RelayCommand(Dialog.Close);
         }
-
-        private readonly IService _service;
-        private readonly IDialogService _dialog;
 
         public ICommand Load { get; }
         public ICommand Close { get; }
@@ -29,16 +22,15 @@ namespace EnvironmentControl.ViewModels {
         public double Left { get; set; }
 
         private async Task DoLoad() {
-            var items = new List<VariableViewModel>();
-            var result = await _service.Load();
+            var result = await Service.Load();
             Top = result.Top;
             Left = result.Left;
-            Items = result.Variables.Select(x => new VariableViewModel(_service, x)).ToArray();
+            Items = result.Variables.Select(x => new VariableViewModel(x)).ToArray();
             Notify(nameof(Items), nameof(Top), nameof(Left));
         }
 
         private async Task DoClosing() {
-            await _service.SaveCoordination(Top, Left);
+            await Service.SaveCoordination(Top, Left);
         }
     }
 }

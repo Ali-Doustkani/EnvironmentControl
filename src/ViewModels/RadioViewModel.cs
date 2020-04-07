@@ -1,15 +1,15 @@
-﻿using EnvironmentControl.Services;
+﻿using EnvironmentControl.Common;
+using EnvironmentControl.Domain;
+using EnvironmentControl.Services;
 
 namespace EnvironmentControl.ViewModels {
-    public class RadioViewModel : IValueItem {
-        public RadioViewModel(IService service, Variable variable, Value value, bool selected) {
-            _service = service;
+    public class RadioViewModel : ViewModel, IValueItem {
+        public RadioViewModel(Variable variable, Value value, bool selected) {
             _variable = variable;
             _value = value;
             _selected = selected;
         }
 
-        private readonly IService _service;
         private readonly Variable _variable;
         private readonly Value _value;
         private bool _selected;
@@ -24,7 +24,7 @@ namespace EnvironmentControl.ViewModels {
             get => _selected;
             set {
                 if (value)
-                    _service.SetVariable(_variable.Name, _value.ActualValue);
+                    Service.SetVariable(_variable.Name, _value.ActualValue);
                 _selected = value;
             }
         }

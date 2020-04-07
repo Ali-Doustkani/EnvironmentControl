@@ -33,7 +33,7 @@
             </RadioButton>
         </DataTemplate>
         <DataTemplate x:Key="AddButton">
-            <Button>Add</Button>
+            <Button Command="{Binding NewValue}">Add</Button>
         </DataTemplate>
     </UserControl.Resources>
     <Border Padding="10" Margin="0 0 0 10" CornerRadius="5">

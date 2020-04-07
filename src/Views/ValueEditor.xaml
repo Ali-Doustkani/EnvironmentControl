@@ -1,0 +1,22 @@
+﻿<Window x:Class="EnvironmentControl.Views.ValueEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EnvironmentControl.Views"
+        mc:Ignorable="d"
+        Title="ValueEditor" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox Text="{Binding Title}"></TextBox>
+        <TextBox Grid.Row="1" Text="{Binding ActualValue}"></TextBox>
+        <StackPanel Grid.Row="2">
+            <Button Command="{Binding Ok}">Ok</Button>
+            <Button Command="{Binding Cancel}">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.Services {
     public interface IService {
@@ -6,5 +7,6 @@ namespace EnvironmentControl.Services {
         string GetVariable(string name);
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);
+        Task SaveVariable(Variable variables);
     }
 }
