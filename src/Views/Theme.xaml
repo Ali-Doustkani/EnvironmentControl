@@ -4,6 +4,8 @@
     <SolidColorBrush x:Key="ValueBackground" Color="#333745"/>
     <SolidColorBrush x:Key="ValueBackgroundOnSelection" Color="#464b5e"/>
     <SolidColorBrush x:Key="ValueBackgroundOnMouseOver" Color="#464b5e"/>
+    <SolidColorBrush x:Key="AddValueBackground" Color="#333745" Opacity="0.8"/>
+    <SolidColorBrush x:Key="AddValueBackgroundOnMouseOver" Color="#464b5e" Opacity="0.5"/>
     <SolidColorBrush x:Key="ValueTitleColor" Color="#fe5f55"/>
     <SolidColorBrush x:Key="ValueValueColor" Color="White"/>
     <SolidColorBrush x:Key="VariableColor" Color="#eef5db"/>
