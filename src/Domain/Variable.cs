@@ -9,5 +9,12 @@ namespace EnvironmentControl.Domain {
 
         public string Name { get; }
         public List<Value> Values { get; }
+
+        public Value UpdateValue(Value value, string title, string actualValue) {
+            var newValue = new Value(title, actualValue);
+            Values.Insert(Values.IndexOf(value), newValue);
+            Values.Remove(value);
+            return newValue;
+        }
     }
 }

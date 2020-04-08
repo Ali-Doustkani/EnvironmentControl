@@ -8,12 +8,15 @@ namespace EnvironmentControl.ViewModels {
         public MainViewModel() {
             Load = new RelayCommand(DoLoad);
             Closing = new RelayCommand(DoClosing);
-            Close = new RelayCommand(Dialog.Close);
+            Edit = new RelayCommand(DoEdit);
+            _state = State.Normal;
         }
 
+        private State _state;
+
         public ICommand Load { get; }
-        public ICommand Close { get; }
         public ICommand Closing { get; }
+        public ICommand Edit { get; }
 
         public VariableViewModel[] Items { get; private set; }
 
@@ -31,6 +34,13 @@ namespace EnvironmentControl.ViewModels {
 
         private async Task DoClosing() {
             await Service.SaveCoordination(Top, Left);
+        }
+
+        private void DoEdit() {
+            _state = _state == State.Normal ? State.Editing : State.Normal;
+            foreach (var item in Items) {
+                item.SetState(_state);
+            }
         }
     }
 }

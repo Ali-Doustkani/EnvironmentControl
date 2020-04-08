@@ -7,16 +7,28 @@ using EnvironmentControl.Views;
 
 namespace EnvironmentControl.Common {
     public class DialogService : IDialogService {
-        public DialogResult ShowValueEditor() {
+        public ValueDialogResult ShowValueEditor() {
             var view = new ValueEditor();
             var ctx = new ValueEditorViewModel();
             view.DataContext = ctx;
             var result = view.ShowDialog();
             if (result == true) {
-                return DialogResult.Succeeded(new Value(ctx.Title, ctx.ActualValue));
+                return ValueDialogResult.Added(ctx.Title, ctx.ActualValue);
             }
+            return ValueDialogResult.Failed();
+        }
 
-            return DialogResult.Failed();
+        public ValueDialogResult ShowValueEditor(Value value) {
+            var view = new ValueEditor();
+            var ctx = new ValueEditorViewModel();
+            ctx.Title = value.Title;
+            ctx.ActualValue = value.ActualValue;
+            view.DataContext = ctx;
+            var result = view.ShowDialog();
+            if (result == true) {
+                return ValueDialogResult.Edited(ctx.Title, ctx.ActualValue);
+            }
+            return ValueDialogResult.Failed();
         }
 
         public void Accept() => CurrentWindow().DialogResult = true;

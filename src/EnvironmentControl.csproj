@@ -10,6 +10,7 @@
     <None Remove="Resources\add.png" />
     <None Remove="Resources\close.png" />
     <None Remove="Resources\more.png" />
+    <None Remove="Resources\pen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <Resource Include="Resources\add.png" />
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\more.png" />
+    <Resource Include="Resources\pen.png" />
   </ItemGroup>
 
 </Project>

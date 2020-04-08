@@ -1,6 +1,9 @@
-﻿namespace EnvironmentControl.Common {
+﻿using EnvironmentControl.Domain;
+
+namespace EnvironmentControl.Common {
     public interface IDialogService {
-        DialogResult ShowValueEditor();
+        ValueDialogResult ShowValueEditor();
+        ValueDialogResult ShowValueEditor(Value value);
         void Accept();
         void Close();
     }

@@ -1,6 +1,5 @@
 ﻿using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
-using EnvironmentControl.Services;
 
 namespace EnvironmentControl.ViewModels {
     public class RadioViewModel : ViewModel, IValueItem {
@@ -8,11 +7,13 @@ namespace EnvironmentControl.ViewModels {
             _variable = variable;
             _value = value;
             _selected = selected;
+            _state = State.Normal;
         }
 
         private readonly Variable _variable;
-        private readonly Value _value;
+        private Value _value;
         private bool _selected;
+        private State _state;
 
         public ItemType Type => ItemType.Radio;
 
@@ -23,10 +24,28 @@ namespace EnvironmentControl.ViewModels {
         public bool Selected {
             get => _selected;
             set {
+                if (_state == State.Editing) {
+                    var result = Dialog.ShowValueEditor(_value);
+                    if (result.Accepted) {
+                        if (result.Status == ValueEditStatus.Edited) {
+                            _value = _variable.UpdateValue(_value, result.Title, result.ActualValue);
+                            Notify(nameof(Title), nameof(ActualValue));
+                        }
+                        else if (result.Status == ValueEditStatus.Deleted) {
+                            _variable.Values.Remove(_value);
+                        }
+                        Service.SaveVariable(_variable);
+                    }
+                    return;
+                }
                 if (value)
                     Service.SetVariable(_variable.Name, _value.ActualValue);
                 _selected = value;
             }
+        }
+
+        public void SetState(State state) {
+            _state = state;
         }
     }
 }

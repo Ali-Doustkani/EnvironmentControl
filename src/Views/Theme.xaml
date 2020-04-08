@@ -12,4 +12,5 @@
     <SolidColorBrush x:Key="SimpleBackground" Color="Gray" Opacity="0.5"/>
     <SolidColorBrush x:Key="CloseBackgroundOnOver" Color="#e04f60" Opacity="0.5"/>
     <SolidColorBrush x:Key="MoreBackgroundOnOver" Color="LightSkyBlue" Opacity="0.5"/>
+    <SolidColorBrush x:Key="EditBackgroundOnOver" Color="#eef5db" Opacity="0.7"/>
 </ResourceDictionary>

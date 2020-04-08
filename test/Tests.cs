@@ -27,7 +27,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Load_saved_values_on_load() {
             var vm = new MainViewModel();
-            _service.Load().Returns(Result());
+            _service.Load().Returns(Startup());
 
             vm.Load.Execute(null);
 
@@ -39,7 +39,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
             var vm = new MainViewModel();
-            _service.Load().Returns(Result());
+            _service.Load().Returns(Startup());
 
             vm.Load.Execute(null);
 
@@ -51,7 +51,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Select_the_current_value_on_load() {
             var vm = new MainViewModel();
-            _service.Load().Returns(Result());
+            _service.Load().Returns(Startup());
             _service.GetVariable("myVar").Returns("b");
 
             vm.Load.Execute(null);
@@ -62,7 +62,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Select_nothing_if_the_current_value_is_not_available() {
             var vm = new MainViewModel();
-            _service.Load().Returns(Result());
+            _service.Load().Returns(Startup());
             _service.GetVariable("myVar").Returns("c");
 
             vm.Load.Execute(null);
@@ -81,8 +81,8 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Add_a_new_value_for_a_variable() {
-            _service.Load().Returns(Result());
-            _dialog.ShowValueEditor().Returns(DialogResult.Succeeded(new Value("third", "c")));
+            _service.Load().Returns(Startup());
+            _dialog.ShowValueEditor().Returns(ValueDialogResult.Added( "third", "c") );
             var vm = new MainViewModel();
             vm.Load.Execute(null);
 
@@ -95,7 +95,26 @@ namespace EnvironmentControl.Tests.ViewModels {
             db.Variables[0].Values.Should().BeEquivalentTo(new Value("first", "a"), new Value("second", "b"), new Value("third", "c"));
         }
 
-        private LoadResult Result() => LoadResult.Successful(
+        [Fact]
+        public void Edit_a_value_of_variable()
+        {
+            _service.Load().Returns(Startup());
+            _dialog.ShowValueEditor(Arg.Any<Value>()).Returns(ValueDialogResult.Edited("first2", "a2"));
+            var vm = new MainViewModel();
+            vm.Load.Execute(null);
+
+            vm.Edit.Execute(null);
+            ((RadioViewModel) vm.Items[0].Values[0]).Selected = true;
+
+            vm.Items[0].Values.Should().HaveCount(3);
+            var db = ReadDb();
+            db.Variables.Should().HaveCount(1);
+            db.Variables[0].Values.Should().HaveCount(2);
+            db.Variables[0].Values[0].Title.Should().Be("first2");
+            db.Variables[0].Values[0].ActualValue.Should().Be("a2");
+        }
+
+        private LoadResult Startup() => LoadResult.Successful(
             new[] { new Variable("myVar", new List<Value> { new Value("first", "a"), new Value("second", "b") }) }, 200, 500);
 
         private Db ReadDb() {

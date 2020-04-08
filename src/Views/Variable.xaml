@@ -28,7 +28,7 @@
             </RadioButton>
         </DataTemplate>
         <DataTemplate x:Key="AddButton">
-            <views:SimpleButton Command="{Binding NewValue}" Width="50" Background="{StaticResource AddValueBackground}" MouseOverBackground="{StaticResource AddValueBackgroundOnMouseOver}">
+            <views:SimpleButton Command="{Binding NewValue}" Width="50" Visibility="{Binding Visibility}" Background="{StaticResource AddValueBackground}" MouseOverBackground="{StaticResource AddValueBackgroundOnMouseOver}">
                 <Image Source="../Resources/add.png" Width="16" Height="16" Opacity="0.3"/>
             </views:SimpleButton>
         </DataTemplate>

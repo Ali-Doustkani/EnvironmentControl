@@ -1,9 +1,8 @@
-﻿using EnvironmentControl.Services;
+﻿using EnvironmentControl.Common;
+using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using EnvironmentControl.Common;
-using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel {
@@ -28,6 +27,12 @@ namespace EnvironmentControl.ViewModels {
                     _values = new ObservableCollection<IValueItem>(list);
                 }
                 return _values;
+            }
+        }
+
+        public void SetState(State state) {
+            foreach (var value in Values) {
+                value.SetState(state);
             }
         }
 

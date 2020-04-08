@@ -5,7 +5,7 @@
             ActualValue = actualValue;
         }
 
-        public string Title { get; }
+        public string Title { get;  }
         public string ActualValue { get; }
     }
 }
