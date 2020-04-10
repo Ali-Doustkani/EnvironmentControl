@@ -5,7 +5,7 @@ using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
 
-    public delegate void ValueApprovedDelegate(Value newValue);
+    public delegate void AddValueDelegate(Value newValue);
 
     public class ButtonViewModel : ViewModel, IValueItem {
         public ButtonViewModel() {
@@ -19,7 +19,7 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand NewValue { get; }
 
-        public event ValueApprovedDelegate ValueApproved;
+        public event AddValueDelegate ValueAdded;
 
         public Visibility Visibility {
             get {
@@ -37,7 +37,7 @@ namespace EnvironmentControl.ViewModels {
         private void ShowEditor() {
             var result = Dialog.ShowValueEditor();
             if (result.Accepted) {
-                ValueApproved?.Invoke(new Value(result.Title, result.ActualValue));
+                ValueAdded?.Invoke(new Value(result.Title, result.ActualValue));
             }
         }
     }

@@ -18,13 +18,7 @@ namespace EnvironmentControl.ViewModels {
         public ObservableCollection<IValueItem> Values {
             get {
                 if (_values == null) {
-                    var list = new List<IValueItem>();
-                    var selectedValue = Service.GetVariable(_variable.Name);
-                    list.AddRange(_variable.Values.Select(x => new RadioViewModel(_variable, x, x.ActualValue == selectedValue)));
-                    var button = new ButtonViewModel();
-                    button.ValueApproved += ValueApproved;
-                    list.Add(button);
-                    _values = new ObservableCollection<IValueItem>(list);
+                    FillValues();
                 }
                 return _values;
             }
@@ -36,11 +30,39 @@ namespace EnvironmentControl.ViewModels {
             }
         }
 
-        private void ValueApproved(Value newValue) {
+        private void ValueAdded(Value newValue) {
             var item = new RadioViewModel(_variable, newValue, false);
             _variable.Values.Add(newValue);
             _values.Insert(_values.Count - 1, item);
             Service.SaveVariable(_variable);
+        }
+
+        private void FillValues() {
+            if (_values != null) {
+                foreach (var i in _values.Take(_values.Count - 1).Cast<RadioViewModel>()) {
+                    i.ValueDeleted -= ValueDeleted;
+                }
+                ((ButtonViewModel)_values.Last()).ValueAdded -= ValueAdded;
+            }
+            var list = new List<IValueItem>();
+            var selectedValue = Service.GetVariable(_variable.Name);
+            RadioViewModel CreateRadio(Value x) {
+                var ret = new RadioViewModel(_variable, x, x.ActualValue == selectedValue);
+                ret.ValueDeleted += ValueDeleted;
+                return ret;
+            }
+            list.AddRange(_variable.Values.Select(CreateRadio));
+            var button = new ButtonViewModel();
+            button.ValueAdded += ValueAdded;
+            list.Add(button);
+            _values = new ObservableCollection<IValueItem>(list);
+        }
+
+        private void ValueDeleted(Value deletedValue) {
+            _variable.Values.Remove(deletedValue);
+            FillValues();
+            Service.SaveVariable(_variable);
+            Notify(nameof(Values));
         }
     }
 

@@ -9,7 +9,7 @@ namespace EnvironmentControl.Common {
     public class DialogService : IDialogService {
         public ValueDialogResult ShowValueEditor() {
             var view = new ValueEditor();
-            var ctx = new ValueEditorViewModel();
+            var ctx = new ValueEditorViewModel(false);
             view.DataContext = ctx;
             var result = view.ShowDialog();
             if (result == true) {
@@ -20,12 +20,14 @@ namespace EnvironmentControl.Common {
 
         public ValueDialogResult ShowValueEditor(Value value) {
             var view = new ValueEditor();
-            var ctx = new ValueEditorViewModel();
+            var ctx = new ValueEditorViewModel(true);
             ctx.Title = value.Title;
             ctx.ActualValue = value.ActualValue;
             view.DataContext = ctx;
             var result = view.ShowDialog();
             if (result == true) {
+                if (ctx.Deleted)
+                    return ValueDialogResult.Deleted();
                 return ValueDialogResult.Edited(ctx.Title, ctx.ActualValue);
             }
             return ValueDialogResult.Failed();

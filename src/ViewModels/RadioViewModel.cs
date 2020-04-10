@@ -1,7 +1,10 @@
-﻿using EnvironmentControl.Common;
+﻿using System;
+using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
+    public delegate void ValueDeleted(Value deletedValue);
+
     public class RadioViewModel : ViewModel, IValueItem {
         public RadioViewModel(Variable variable, Value value, bool selected) {
             _variable = variable;
@@ -21,6 +24,8 @@ namespace EnvironmentControl.ViewModels {
 
         public string ActualValue => _value.ActualValue;
 
+        public event ValueDeleted ValueDeleted;
+
         public bool Selected {
             get => _selected;
             set {
@@ -32,7 +37,7 @@ namespace EnvironmentControl.ViewModels {
                             Notify(nameof(Title), nameof(ActualValue));
                         }
                         else if (result.Status == ValueEditStatus.Deleted) {
-                            _variable.Values.Remove(_value);
+                            ValueDeleted?.Invoke(_value);
                         }
                         Service.SaveVariable(_variable);
                     }
