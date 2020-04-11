@@ -9,6 +9,11 @@
   <ItemGroup>
     <None Remove="Resources\add.png" />
     <None Remove="Resources\close.png" />
+    <None Remove="Resources\Fonts\BalooTamma2-Bold.ttf" />
+    <None Remove="Resources\Fonts\BalooTamma2-ExtraBold.ttf" />
+    <None Remove="Resources\Fonts\BalooTamma2-Medium.ttf" />
+    <None Remove="Resources\Fonts\BalooTamma2-Regular.ttf" />
+    <None Remove="Resources\Fonts\BalooTamma2-SemiBold.ttf" />
     <None Remove="Resources\more.png" />
     <None Remove="Resources\pen.png" />
   </ItemGroup>
@@ -21,6 +26,11 @@
   <ItemGroup>
     <Resource Include="Resources\add.png" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\Fonts\BalooTamma2-Bold.ttf" />
+    <Resource Include="Resources\Fonts\BalooTamma2-ExtraBold.ttf" />
+    <Resource Include="Resources\Fonts\BalooTamma2-Medium.ttf" />
+    <Resource Include="Resources\Fonts\BalooTamma2-Regular.ttf" />
+    <Resource Include="Resources\Fonts\BalooTamma2-SemiBold.ttf" />
     <Resource Include="Resources\more.png" />
     <Resource Include="Resources\pen.png" />
   </ItemGroup>

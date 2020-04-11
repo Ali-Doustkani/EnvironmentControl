@@ -15,10 +15,14 @@ namespace EnvironmentControl.ViewModels {
         private State _state;
 
         public ICommand Load { get; }
+
         public ICommand Closing { get; }
+
         public ICommand Edit { get; }
 
         public VariableViewModel[] Items { get; private set; }
+
+        public string EditText => _state == State.Editing ? "End Editing" : "Edit";
 
         public double Top { get; set; }
 
@@ -41,6 +45,7 @@ namespace EnvironmentControl.ViewModels {
             foreach (var item in Items) {
                 item.SetState(_state);
             }
+            Notify(nameof(EditText));
         }
     }
 }

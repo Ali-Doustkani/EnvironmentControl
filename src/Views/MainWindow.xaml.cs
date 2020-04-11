@@ -24,5 +24,7 @@ namespace EnvironmentControl.Views {
             ViewModel().Left = Left;
             ViewModel().Closing.Execute(null);
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e) => Close();
     }
 }

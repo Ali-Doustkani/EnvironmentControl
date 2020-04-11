@@ -6,9 +6,10 @@
         Title="Environment Control" 
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="{StaticResource AppBackground}"
+        Background="Transparent"
+        Padding="10"
         Width="300"
-        MinHeight="300"
+ 
         SizeToContent="Height"
         MouseDown="MainWindow_OnMouseDown"
         Loaded="MainWindow_OnLoaded" 
@@ -22,7 +23,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Border" Background="{StaticResource SimpleBackground}" CornerRadius="4">
+                        <Border x:Name="Border" Background="{StaticResource SimpleBackground}" CornerRadius="6">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -38,22 +39,25 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid>
-        <views:SimpleButton Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Background="{StaticResource SimpleBackground}" MouseOverBackground="{StaticResource CloseBackgroundOnOver}" Command="{Binding Close}">
-            <Image Source="../Resources/close.png" Width="12" Height="12"/>
-        </views:SimpleButton>
-        <views:SimpleButton Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 40 0" Background="{StaticResource SimpleBackground}" MouseOverBackground="{StaticResource MoreBackgroundOnOver}" Command="{Binding Settings}">
-            <Image Source="../Resources/more.png" Width="12" Height="12"/>
-        </views:SimpleButton>
-        <ToggleButton Width="25" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 70 0" Command="{Binding Edit}">
-            <Image Source="../Resources/pen.png" Width="12" Height="12"/>
-        </ToggleButton>
-        <ItemsControl Margin="0 20 0 0" Padding="10" ItemsSource="{Binding Items}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <views:Variable/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+    <Border CornerRadius="3" Background="{StaticResource AppBackground}" BorderBrush="{StaticResource AppBorderColor}" BorderThickness="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Margin="10 5" Foreground="#34495e" FontFamily="../Resources/Fonts/#Baloo Tamma 2" FontWeight="DemiBold" FontSize="21">{ Env_Vars }</TextBlock>
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 10 10 0" Orientation="Horizontal">
+                <views:TextButton Text="{Binding EditText}" Color="#34495e" ColorOnMouseOver="#e74c3c" Command="{Binding Edit}"/>
+                <TextBlock FontSize="18">|</TextBlock>
+                <views:TextButton Text="Close" Color="#34495e" ColorOnMouseOver="#e74c3c" Click="Close_Click"/>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" Padding="10 0 10 10" ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <views:Variable/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Border>
 </Window>
