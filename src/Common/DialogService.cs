@@ -37,7 +37,7 @@ namespace EnvironmentControl.Common {
             view.DataContext = vm;
             var result = view.ShowDialog();
             if (result == true) {
-                return DialogResult.Added(new Dictionary<string, string> { { "Name", vm.SelectedName } });
+                return DialogResult.Added(new Dictionary<string, string> { { "Name", vm.SelectedVariable.Name } });
             }
             return DialogResult.Failed();
         }

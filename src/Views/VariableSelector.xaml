@@ -1,14 +1,49 @@
 ﻿<Window x:Class="EnvironmentControl.Views.VariableSelector"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="VariableSelector" Height="450" Width="800"
-        Loaded="Window_Loaded">
-   <Grid>
-       <Grid.RowDefinitions>
-           <RowDefinition Height="Auto"/>
-           <RowDefinition/>
-       </Grid.RowDefinitions>
-       <Button>Close</Button>
-       <ListBox Grid.Row="1" ItemsSource="{Binding Variables}" SelectedItem="{Binding SelectedName}"/>
-   </Grid>
+        xmlns:views="clr-namespace:EnvironmentControl.Views"
+        Title="VariableSelector" Height="600" Width="500"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Border" Padding="5" CornerRadius="2" Background="{StaticResource AppBackground}" Cursor="Hand">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#95a5a6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border Style="{StaticResource WindowStyle}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="15 5 0 0" Foreground="#34495e" FontFamily="../Resources/Fonts/#Baloo Tamma 2" FontWeight="DemiBold" FontSize="21">Select a variable:</TextBlock>
+            <views:TextButton Grid.Row="0" HorizontalAlignment="Right" Margin="0 5 15 0" Text="Close" Color="#34495e" ColorOnMouseOver="#e74c3c" Click="Close_Click"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Variables}" SelectedItem="{Binding SelectedVariable}" BorderThickness="0 1 0 0" Background="{StaticResource AppBackground}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock FontFamily="Courier New" FontSize="17" Text="{Binding Name}" Foreground="#2c3e50"/>
+                            <TextBlock FontFamily="Courier New" FontSize="12" Text="{Binding Type}" Foreground="#7f8c8d"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Border>
 </Window>

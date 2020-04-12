@@ -11,7 +11,10 @@ namespace EnvironmentControl.Views {
 
         private MainViewModel ViewModel() => (MainViewModel)DataContext;
 
-        private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e) => DragMove();
+        private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e) {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e) {
             ViewModel().Load.Execute(null);

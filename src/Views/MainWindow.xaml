@@ -24,7 +24,7 @@
             <views:AddButton Margin="0 10 0 0" Visibility="{Binding Visibility}" Background="{StaticResource AddVariableBackground}" MouseOverBackground="{StaticResource AddVariableBackgroundOnMouseOver}"/>
         </DataTemplate>
     </Window.Resources>
-    <Border CornerRadius="3" Background="{StaticResource AppBackground}" BorderBrush="{StaticResource AppBorderColor}" BorderThickness="2">
+    <Border Style="{StaticResource WindowStyle}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
