@@ -4,8 +4,7 @@ namespace EnvironmentControl.Common {
     public interface IDialogService {
         DialogResult ShowValueEditor();
         DialogResult ShowValueEditor(Value value);
-        DialogResult ShowVariableEditor();
-        DialogResult ShowVariableEditor(Variable variable);
+        DialogResult ShowVariableSelector();
         void Accept();
         void Close();
     }

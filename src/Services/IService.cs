@@ -5,6 +5,7 @@ namespace EnvironmentControl.Services {
     public interface IService {
         void SetVariable(string name, string value);
         string GetVariable(string name);
+        string[] GetVariables();
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);
         Task SaveVariable(Variable variables);

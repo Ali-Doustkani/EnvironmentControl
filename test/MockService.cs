@@ -29,6 +29,8 @@ namespace EnvironmentControl.Tests {
             return _environmentVariables[name];
         }
 
+        public string[] GetVariables() => _environmentVariables.Keys.ToArray();
+
         public Task<LoadResult> Load() {
             var str = JsonConvert.SerializeObject(Db);
             var otherDb = JsonConvert.DeserializeObject<Db>(str);

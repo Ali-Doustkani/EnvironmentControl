@@ -45,7 +45,7 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private void CommandMade() {
-            var result = Dialog.ShowVariableEditor();
+            var result = Dialog.ShowVariableSelector();
             if (result.Accepted) {
                 var newVariable = new Variable(result["Name"]);
                 var vm = new VariableViewModel(newVariable);

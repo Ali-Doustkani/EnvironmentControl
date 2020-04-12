@@ -16,6 +16,8 @@ namespace EnvironmentControl.Services {
             return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
         }
 
+        public string[] GetVariables() => Environment.GetEnvironmentVariables().Keys.Cast<string>().OrderBy(x => x).ToArray();
+
         public async Task<LoadResult> Load() {
             try {
                 var db = await ReadDb();
