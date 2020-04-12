@@ -20,7 +20,7 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand Edit { get; }
 
-        public VariableViewModel[] Items { get; private set; }
+        public ITypedViewModel[] Items { get; private set; }
 
         public string EditText => _state == State.Editing ? "End Editing" : "Edit";
 
@@ -32,7 +32,9 @@ namespace EnvironmentControl.ViewModels {
             var result = await Service.Load();
             Top = result.Top;
             Left = result.Left;
-            Items = result.Variables.Select(x => new VariableViewModel(x)).ToArray();
+            var items = result.Variables.Select(x => new VariableViewModel(x)).Cast<ITypedViewModel>().ToList();
+            items.Add(new ButtonViewModel());
+            Items = items.ToArray();
             Notify(nameof(Items), nameof(Top), nameof(Left));
         }
 

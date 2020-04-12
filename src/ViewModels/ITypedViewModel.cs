@@ -1,8 +1,7 @@
 ﻿namespace EnvironmentControl.ViewModels
 {
-    public interface IValueItem {
-        ItemType Type { get; }
-
+    public interface ITypedViewModel {
+        int Type { get; }
         void SetState(State state);
     }
 }

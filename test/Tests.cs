@@ -64,7 +64,7 @@ namespace EnvironmentControl.Tests.ViewModels {
             var vm = new MainViewModel();
             vm.Load.Execute(null);
 
-            ((ButtonViewModel)vm.Items[0].Values[2]).NewValue.Execute(null);
+            ((ButtonViewModel)vm.Items[0].Values[2]).Command.Execute(null);
 
             vm.Items[0].Values.Should().HaveCount(4);
             _service.Db.Variables.Should().HaveCount(1);

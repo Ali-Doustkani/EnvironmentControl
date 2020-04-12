@@ -17,4 +17,6 @@
     <SolidColorBrush x:Key="CloseBackgroundOnOver" Color="#e04f60" Opacity="0.5"/>
     <SolidColorBrush x:Key="MoreBackgroundOnOver" Color="LightSkyBlue" Opacity="0.5"/>
     <SolidColorBrush x:Key="EditBackgroundOnOver" Color="#eef5db" Opacity="0.7"/>
+    <SolidColorBrush x:Key="AddVariableBackground" Color="#34495e"/>
+    <SolidColorBrush x:Key="AddVariableBackgroundOnMouseOver" Color="#34495e" Opacity="0.8"/>
 </ResourceDictionary>

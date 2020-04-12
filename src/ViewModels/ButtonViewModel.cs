@@ -1,25 +1,22 @@
-﻿using System.Windows;
+﻿using EnvironmentControl.Common;
+using System;
+using System.Windows;
 using System.Windows.Input;
-using EnvironmentControl.Common;
-using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
-
-    public delegate void AddValueDelegate(Value newValue);
-
-    public class ButtonViewModel : ViewModel, IValueItem {
+    public class ButtonViewModel : ViewModel, ITypedViewModel {
         public ButtonViewModel() {
-            NewValue = new RelayCommand(ShowEditor);
+            Command = new RelayCommand(() => CommandMade?.Invoke());
             _state = State.Normal;
         }
 
         private State _state;
 
-        public ItemType Type => ItemType.Button;
+        public int Type => 2;
 
-        public ICommand NewValue { get; }
+        public ICommand Command { get; }
 
-        public event AddValueDelegate ValueAdded;
+        public event Action CommandMade;
 
         public Visibility Visibility {
             get {
@@ -32,13 +29,6 @@ namespace EnvironmentControl.ViewModels {
         public void SetState(State state) {
             _state = state;
             Notify(nameof(Visibility));
-        }
-
-        private void ShowEditor() {
-            var result = Dialog.ShowValueEditor();
-            if (result.Accepted) {
-                ValueAdded?.Invoke(new Value(result.Title, result.ActualValue));
-            }
         }
     }
 }

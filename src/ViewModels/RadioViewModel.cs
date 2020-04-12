@@ -1,11 +1,10 @@
-﻿using System;
-using EnvironmentControl.Common;
+﻿using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
     public delegate void ValueDeleted(Value deletedValue);
 
-    public class RadioViewModel : ViewModel, IValueItem {
+    public class RadioViewModel : ViewModel, ITypedViewModel {
         public RadioViewModel(Variable variable, Value value, bool selected) {
             _variable = variable;
             _value = value;
@@ -18,7 +17,7 @@ namespace EnvironmentControl.ViewModels {
         private bool _selected;
         private State _state;
 
-        public ItemType Type => ItemType.Radio;
+        public int Type => 1;
 
         public string Title => _value.Title;
 

@@ -30,10 +30,10 @@
             </RadioButton>
         </DataTemplate>
         <DataTemplate x:Key="AddButton">
-            <views:AddButton Command="{Binding NewValue}" Width="50" Visibility="{Binding Visibility}" Background="{StaticResource AddValueBackground}" MouseOverBackground="{StaticResource AddValueBackgroundOnMouseOver}"/>
+            <views:AddButton Width="50" Visibility="{Binding Visibility}" Background="{StaticResource AddValueBackground}" MouseOverBackground="{StaticResource AddValueBackgroundOnMouseOver}"/>
         </DataTemplate>
     </UserControl.Resources>
-    <Border Padding="10" Margin="0 10 0 0" CornerRadius="5" Background="{StaticResource VariableBackground}">
+    <Border Padding="10" CornerRadius="5" Background="{StaticResource VariableBackground}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
