@@ -16,7 +16,21 @@ namespace EnvironmentControl.Services {
             return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
         }
 
-        public string[] GetVariables() => Environment.GetEnvironmentVariables().Keys.Cast<string>().OrderBy(x => x).ToArray();
+        public WindowsVariable[] GetVariables() {
+            var ret = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User)
+                .Keys
+                .Cast<string>()
+                .OrderBy(x => x)
+                .Select(x => new WindowsVariable(Type.User, x))
+                .ToList();
+            ret.AddRange(Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine)
+                .Keys
+                .Cast<string>()
+                .OrderBy(x => x)
+                .Select(x => new WindowsVariable(Type.System, x))
+            );
+            return ret.ToArray();
+        }
 
         public async Task<LoadResult> Load() {
             try {

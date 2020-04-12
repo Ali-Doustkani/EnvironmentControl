@@ -1,5 +1,6 @@
 ﻿using EnvironmentControl.Common;
 using System.Windows.Input;
+using EnvironmentControl.Services;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableSelectorViewModel : ViewModel {
@@ -9,13 +10,13 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand Load { get; }
 
-        public string[] Variables { get; private set; }
+        public WindowsVariable[] Variables { get; private set; }
 
-        private string _selectedName;
-        public string SelectedName {
-            get => _selectedName;
+        private WindowsVariable _selectedVariable;
+        public WindowsVariable SelectedVariable {
+            get => _selectedVariable;
             set {
-                _selectedName = value;
+                _selectedVariable = value;
                 Dialog.Accept();
             }
         }
