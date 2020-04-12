@@ -48,6 +48,7 @@ namespace EnvironmentControl.ViewModels {
             var result = Dialog.ShowVariableSelector();
             if (result.Accepted) {
                 var newVariable = new Variable(result["Name"]);
+                newVariable.AddValue("Default", Service.GetVariable(result["Name"]));
                 var vm = new VariableViewModel(newVariable);
                 vm.SetState(_state);
                 Items.Insert(Items.Count - 1, vm);

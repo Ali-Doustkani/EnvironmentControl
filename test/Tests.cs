@@ -17,6 +17,7 @@ namespace EnvironmentControl.Tests.ViewModels {
             ServiceLocator.Instance = Substitute.For<IServiceLocator>();
             ServiceLocator.Instance.Service.Returns(_service);
             ServiceLocator.Instance.Dialog.Returns(_dialog);
+            _main.Load.Execute(null);
         }
 
         private readonly MainViewModel _main;
@@ -25,8 +26,6 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Load_saved_values_on_load() {
-            _main.Load.Execute(null);
-
             _main.Items.Should().HaveCount(2);
             GetValue(0, 0).Should().BeEquivalentTo(new Value("first", "a"));
             GetValue(0, 1).Should().BeEquivalentTo(new Value("second", "b"));
@@ -34,26 +33,18 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
-            _main.Load.Execute(null);
-
             ClickOn(0, 0);
-
             _service.GetVariable("myVar").Should().Be("a");
         }
 
         [Fact]
         public void Select_the_current_value_on_load() {
-            _main.Load.Execute(null);
-
             GetValue(0, 0).Selected.Should().BeTrue();
         }
 
         [Fact]
         public void Select_nothing_if_the_current_value_is_not_available() {
             _service.SetVariable("myVar", "c");
-
-            _main.Load.Execute(null);
-
             GetValue(0, 0).Selected.Should().BeFalse();
         }
 
@@ -66,7 +57,6 @@ namespace EnvironmentControl.Tests.ViewModels {
                     {"ActualValue", "c" }
 
                 }));
-            _main.Load.Execute(null);
 
             ClickOn(0, 2);
 
@@ -84,7 +74,6 @@ namespace EnvironmentControl.Tests.ViewModels {
                     {"Title", "first2" },
                     {"ActualValue", "a2" }
                 }));
-            _main.Load.Execute(null);
 
             _main.Edit.Execute(null);
             ClickOn(0, 0);
@@ -99,7 +88,6 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Delete_a_value() {
             _dialog.ShowValueEditor(Arg.Any<Value>()).Returns(DialogResult.Deleted());
-            _main.Load.Execute(null);
 
             _main.Edit.Execute(null);
             ClickOn(0, 0);
@@ -111,9 +99,29 @@ namespace EnvironmentControl.Tests.ViewModels {
             Db.Variables[0].Values[0].ActualValue.Should().Be("b");
         }
 
+        [Fact]
+        public void Add_a_variable() {
+            _dialog.ShowVariableSelector().Returns(DialogResult.Added(new Dictionary<string, string> { { "Name", "JAVA_HOME" } }));
+            _service.SetVariable("JAVA_HOME", "defaultValue");
+
+            _main.Edit.Execute(null);
+            ClickOn(1);
+
+            _main.Items.Should().HaveCount(3);
+            GetVariable(0).Name.Should().Be("myVar");
+            GetVariable(1).Name.Should().Be("JAVA_HOME");
+            GetValue(1, 0).Title.Should().Be("Default");
+            GetValue(1, 0).ActualValue.Should().Be("defaultValue");
+        }
+
         private Db Db => _service.Db;
 
-        private void ClickOn(int variableIndex, int valueIndex) {
+        private void ClickOn(int variableIndex, int valueIndex = -1) {
+            if (valueIndex == -1) {
+                ((ButtonViewModel)_main.Items[variableIndex]).Command.Execute(null);
+                return;
+            }
+
             var value = ((VariableViewModel)_main.Items[variableIndex]).Values[valueIndex];
             if (value is RadioViewModel radio) {
                 radio.Selected = true;
@@ -122,6 +130,8 @@ namespace EnvironmentControl.Tests.ViewModels {
                 button.Command.Execute(null);
             }
         }
+
+        private VariableViewModel GetVariable(int index) => (VariableViewModel) _main.Items[index];
 
         private ObservableCollection<ITypedViewModel> GetValues(int index) => ((VariableViewModel)_main.Items[index]).Values;
 

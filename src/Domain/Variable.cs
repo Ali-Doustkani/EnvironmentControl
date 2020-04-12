@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace EnvironmentControl.Domain {
     public class Variable {
@@ -13,7 +13,13 @@ namespace EnvironmentControl.Domain {
         }
 
         public string Name { get; }
+
         public List<Value> Values { get; }
+
+        public void AddValue(string title, string actualValue) {
+            var newValue = new Value(title, actualValue);
+            Values.Add(newValue);
+        }
 
         public Value UpdateValue(Value value, string title, string actualValue) {
             var newValue = new Value(title, actualValue);
