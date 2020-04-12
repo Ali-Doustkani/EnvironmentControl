@@ -48,6 +48,13 @@ namespace EnvironmentControl.Services {
             await WriteDb(db);
         }
 
+        public async Task DeleteVariable(string variableName) {
+            var db = await ReadDb();
+            var toDelete = db.Variables.Single(x => x.Name == variableName);
+            db.Variables.Remove(toDelete);
+            await WriteDb(db);
+        }
+
         private async Task<Db> ReadDb() {
             if (!File.Exists("db.json"))
                 return new Db(0, 0, new List<Variable>());

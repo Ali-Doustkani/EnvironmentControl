@@ -55,5 +55,11 @@ namespace EnvironmentControl.Tests {
             }
             return Task.CompletedTask;
         }
+
+        public Task DeleteVariable(string variableName) {
+            var toDelete = Db.Variables.Single(x => x.Name == variableName);
+            Db.Variables.Remove(toDelete);
+            return Task.CompletedTask;
+        }
     }
 }

@@ -39,7 +39,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="Bold" FontFamily="Courier New" Foreground="{StaticResource VariableColor}"/>
+            <StackPanel Orientation="Horizontal">
+                <views:DeleteButton Margin="0 0 5 0" Visibility="{Binding Visibility}" Command="{Binding DeleteVariable}"/>
+                <TextBlock Text="{Binding Name}" FontSize="17" FontWeight="Bold" FontFamily="Courier New" Foreground="{StaticResource VariableColor}"/>
+            </StackPanel>
             <ItemsControl Grid.Row="1" ItemsSource="{Binding Values}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

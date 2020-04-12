@@ -9,5 +9,6 @@ namespace EnvironmentControl.Services {
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);
         Task SaveVariable(Variable variables);
+        Task DeleteVariable(string variableName);
     }
 }

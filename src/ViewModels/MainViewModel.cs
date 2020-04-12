@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using EnvironmentControl.Common;
+﻿using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,12 +36,22 @@ namespace EnvironmentControl.ViewModels {
             Top = result.Top;
             Left = result.Left;
             var list = new List<ITypedViewModel>();
-            list.AddRange(result.Variables.Select(x => new VariableViewModel(x)));
+            list.AddRange(result.Variables.Select(x => {
+                var vm = new VariableViewModel(x);
+                vm.Deleted += VariableDeleted;
+                return vm;
+            }));
             var addButton = new ButtonViewModel();
             addButton.CommandMade += CommandMade;
             list.Add(addButton);
             Items = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Items), nameof(Top), nameof(Left));
+        }
+
+        private async void VariableDeleted(VariableViewModel vm) {
+            var deletedItem = Items.Single(x => x.Equals(vm));
+            await Service.DeleteVariable(vm.Name);
+            Items.Remove(deletedItem);
         }
 
         private void CommandMade() {

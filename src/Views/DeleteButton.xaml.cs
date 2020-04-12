@@ -1,6 +1,6 @@
 ﻿namespace EnvironmentControl.Views {
-    public partial class VariableEditor   {
-        public VariableEditor() {
+    public partial class DeleteButton {
+        public DeleteButton() {
             InitializeComponent();
         }
     }

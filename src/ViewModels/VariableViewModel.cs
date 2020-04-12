@@ -1,18 +1,29 @@
-﻿using EnvironmentControl.Common;
+﻿using System;
+using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel, ITypedViewModel {
         public VariableViewModel(Variable variable) {
             _variable = variable;
+            DeleteVariable = new RelayCommand(() => Deleted?.Invoke(this));
         }
 
         private readonly Variable _variable;
+        private State _state;
+
+        public event Action<VariableViewModel> Deleted;
 
         public string Name => _variable.Name;
+
+        public Visibility Visibility => _state == State.Editing ? Visibility.Visible : Visibility.Collapsed;
+
+        public ICommand DeleteVariable { get; }
 
         private ObservableCollection<ITypedViewModel> _values;
         public ObservableCollection<ITypedViewModel> Values {
@@ -27,9 +38,11 @@ namespace EnvironmentControl.ViewModels {
         public int Type => 1;
 
         public void SetState(State state) {
+            _state = state;
             foreach (var value in Values) {
                 value.SetState(state);
             }
+            Notify(nameof(Visibility));
         }
 
         private void CommandMade() {
