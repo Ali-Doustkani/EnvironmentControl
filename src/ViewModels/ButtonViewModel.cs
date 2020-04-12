@@ -5,8 +5,8 @@ using System.Windows.Input;
 
 namespace EnvironmentControl.ViewModels {
     public class ButtonViewModel : ViewModel, ITypedViewModel {
-        public ButtonViewModel() {
-            Command = new RelayCommand(() => CommandMade?.Invoke());
+        public ButtonViewModel(Action onClick) {
+            Command = new RelayCommand(onClick);
             _state = State.Normal;
         }
 
@@ -15,8 +15,6 @@ namespace EnvironmentControl.ViewModels {
         public int Type => 2;
 
         public ICommand Command { get; }
-
-        public event Action CommandMade;
 
         public Visibility Visibility {
             get {

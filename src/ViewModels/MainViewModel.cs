@@ -41,8 +41,7 @@ namespace EnvironmentControl.ViewModels {
                 var vm = new VariableViewModel(x);
                 return vm;
             }));
-            var addButton = new ButtonViewModel();
-            addButton.CommandMade += CommandMade;
+            var addButton = new ButtonViewModel(AddButtonClicked);
             list.Add(addButton);
             Items = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Items), nameof(Top), nameof(Left));
@@ -54,7 +53,7 @@ namespace EnvironmentControl.ViewModels {
             Items.Remove(deletedItem);
         }
 
-        private void CommandMade() {
+        private void AddButtonClicked() {
             var result = Dialog.ShowVariableSelector();
             if (result.Accepted) {
                 var newVariable = new Variable(result["Name"]);

@@ -43,7 +43,20 @@ namespace EnvironmentControl.ViewModels {
             Notify(nameof(Visibility));
         }
 
-        private void CommandMade() {
+        private void FillValues() {
+            var list = new List<ITypedViewModel>();
+            var selectedValue = Service.GetVariable(_variable.Name);
+            RadioViewModel CreateRadio(Value x) {
+                var ret = new RadioViewModel(_variable, x, x.ActualValue == selectedValue);
+                return ret;
+            }
+            list.AddRange(_variable.Values.Select(CreateRadio));
+            list.Add( new ButtonViewModel(AddButtonClicked));
+            _values = new ObservableCollection<ITypedViewModel>(list);
+            Notify(nameof(Values));
+        }
+
+        private void AddButtonClicked() {
             var result = Dialog.ShowValueEditor();
             if (result.Accepted) {
                 var newValue = new Value(result["Title"], result["ActualValue"]);
@@ -52,24 +65,6 @@ namespace EnvironmentControl.ViewModels {
                 _values.Insert(_values.Count - 1, item);
                 Service.SaveVariable(_variable);
             }
-        }
-
-        private void FillValues() {
-            if (_values != null) {
-                ((ButtonViewModel)_values.Last()).CommandMade -= CommandMade;
-            }
-            var list = new List<ITypedViewModel>();
-            var selectedValue = Service.GetVariable(_variable.Name);
-            RadioViewModel CreateRadio(Value x) {
-                var ret = new RadioViewModel(_variable, x, x.ActualValue == selectedValue);
-                return ret;
-            }
-            list.AddRange(_variable.Values.Select(CreateRadio));
-            var button = new ButtonViewModel();
-            button.CommandMade += CommandMade;
-            list.Add(button);
-            _values = new ObservableCollection<ITypedViewModel>(list);
-            Notify(nameof(Values));
         }
 
         private void ValueDeleted(ValueDeletedMessage msg) {
