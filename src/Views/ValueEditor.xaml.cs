@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace EnvironmentControl.Views {
-    /// <summary>
-    /// Interaction logic for ValueEditor.xaml
-    /// </summary>
     public partial class ValueEditor : Window {
         public ValueEditor() {
             InitializeComponent();
         }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e) => Title.Focus();
     }
 }

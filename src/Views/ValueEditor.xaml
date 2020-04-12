@@ -1,19 +1,48 @@
 ﻿<Window x:Class="EnvironmentControl.Views.ValueEditor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ValueEditor" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <TextBox Text="{Binding Title}"></TextBox>
-        <TextBox Grid.Row="1" Text="{Binding ActualValue}"></TextBox>
-        <StackPanel Grid.Row="2">
-            <Button Command="{Binding Ok}">Ok</Button>
-            <Button Command="{Binding Cancel}">Cancel</Button>
-            <Button Visibility="{Binding DeleteVisibility}" Command="{Binding Delete}">Delete</Button>
-        </StackPanel>
-    </Grid>
+        xmlns:views="clr-namespace:EnvironmentControl.Views"
+        Title="ValueEditor" Height="200" Width="600"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#34495e"/>
+            <Setter Property="FontFamily" Value="../Resources/Fonts/#Baloo Tamma 2"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="views:TextButton">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Resources>
+    <Border Style="{StaticResource WindowStyle}" Padding="10">
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label>Title</Label>
+            <TextBox x:Name="Title" Grid.Row="1" Text="{Binding Title}"></TextBox>
+            <Label Grid.Row="2">Value</Label>
+            <TextBox Grid.Row="3" Text="{Binding ActualValue}"></TextBox>
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                <views:TextButton Visibility="{Binding DeleteVisibility}" Text="Delete" Color="#e74c3c" ColorOnMouseOver="#e74c3c" Command="{Binding Delete}" Margin="0 0 10 0"/>
+                <views:TextButton Text="OK" IsDefault="True" Color="#34495e" ColorOnMouseOver="#34495e" Command="{Binding Ok}"/>
+                <views:TextButton Text="Cancel" IsCancel="True" Color="#34495e" ColorOnMouseOver="#34495e" Command="{Binding Cancel}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>
