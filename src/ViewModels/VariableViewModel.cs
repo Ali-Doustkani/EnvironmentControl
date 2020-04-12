@@ -1,5 +1,4 @@
-﻿using System;
-using EnvironmentControl.Common;
+﻿using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,13 +10,12 @@ namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel, ITypedViewModel {
         public VariableViewModel(Variable variable) {
             _variable = variable;
-            DeleteVariable = new RelayCommand(() => Deleted?.Invoke(this));
+            DeleteVariable = new RelayCommand(() => Mediator.Publish(new VariableDeletedMessage(Name)));
+            Mediator.Subscribe<ValueDeletedMessage>(ValueDeleted);
         }
 
         private readonly Variable _variable;
         private State _state;
-
-        public event Action<VariableViewModel> Deleted;
 
         public string Name => _variable.Name;
 
@@ -58,16 +56,12 @@ namespace EnvironmentControl.ViewModels {
 
         private void FillValues() {
             if (_values != null) {
-                foreach (var i in _values.Take(_values.Count - 1).Cast<RadioViewModel>()) {
-                    i.ValueDeleted -= ValueDeleted;
-                }
                 ((ButtonViewModel)_values.Last()).CommandMade -= CommandMade;
             }
             var list = new List<ITypedViewModel>();
             var selectedValue = Service.GetVariable(_variable.Name);
             RadioViewModel CreateRadio(Value x) {
                 var ret = new RadioViewModel(_variable, x, x.ActualValue == selectedValue);
-                ret.ValueDeleted += ValueDeleted;
                 return ret;
             }
             list.AddRange(_variable.Values.Select(CreateRadio));
@@ -78,8 +72,9 @@ namespace EnvironmentControl.ViewModels {
             Notify(nameof(Values));
         }
 
-        private void ValueDeleted(Value deletedValue) {
-            _variable.Values.Remove(deletedValue);
+        private void ValueDeleted(ValueDeletedMessage msg) {
+            var toDelete = _variable.Values.Single(x => x.Title == msg.Title);
+            _variable.Values.Remove(toDelete);
             FillValues();
             Service.SaveVariable(_variable);
             Notify(nameof(Values));

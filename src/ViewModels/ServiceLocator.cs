@@ -23,5 +23,11 @@ namespace EnvironmentControl.ViewModels {
             get => _service ??= new Service();
             set => _service = value;
         }
+
+        private Mediator _mediator;
+        public Mediator Mediator {
+            get => _mediator ??= new Mediator();
+            set => _mediator = value;
+        }
     }
 }

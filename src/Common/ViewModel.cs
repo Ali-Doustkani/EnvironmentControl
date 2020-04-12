@@ -18,5 +18,7 @@ namespace EnvironmentControl.Common {
         public IDialogService Dialog => ServiceLocator.Instance.Dialog;
 
         public IService Service => ServiceLocator.Instance.Service;
+
+        public Mediator Mediator => ServiceLocator.Instance.Mediator;
     }
 }

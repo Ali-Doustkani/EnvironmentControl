@@ -14,9 +14,11 @@ namespace EnvironmentControl.Tests.ViewModels {
             _main = new MainViewModel();
             _service = new MockService();
             _dialog = Substitute.For<IDialogService>();
+            var mediator = new Mediator();
             ServiceLocator.Instance = Substitute.For<IServiceLocator>();
             ServiceLocator.Instance.Service.Returns(_service);
             ServiceLocator.Instance.Dialog.Returns(_dialog);
+            ServiceLocator.Instance.Mediator.Returns(mediator);
             _main.Load.Execute(null);
         }
 

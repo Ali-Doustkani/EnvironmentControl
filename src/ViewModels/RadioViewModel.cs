@@ -2,8 +2,6 @@
 using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
-    public delegate void ValueDeleted(Value deletedValue);
-
     public class RadioViewModel : ViewModel, ITypedViewModel {
         public RadioViewModel(Variable variable, Value value, bool selected) {
             _variable = variable;
@@ -23,8 +21,6 @@ namespace EnvironmentControl.ViewModels {
 
         public string ActualValue => _value.ActualValue;
 
-        public event ValueDeleted ValueDeleted;
-
         public bool Selected {
             get => _selected;
             set {
@@ -36,7 +32,7 @@ namespace EnvironmentControl.ViewModels {
                             Notify(nameof(Title), nameof(ActualValue));
                         }
                         else if (result.Status == EditStatus.Deleted) {
-                            ValueDeleted?.Invoke(_value);
+                            Mediator.Publish(new ValueDeletedMessage(_value.Title));
                         }
                         Service.SaveVariable(_variable);
                     }

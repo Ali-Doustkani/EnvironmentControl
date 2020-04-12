@@ -13,6 +13,7 @@ namespace EnvironmentControl.ViewModels {
             Closing = new RelayCommand(DoClosing);
             Edit = new RelayCommand(DoEdit);
             _state = State.Normal;
+            Mediator.Subscribe<VariableDeletedMessage>(VariableDeleted);
         }
 
         private State _state;
@@ -38,7 +39,6 @@ namespace EnvironmentControl.ViewModels {
             var list = new List<ITypedViewModel>();
             list.AddRange(result.Variables.Select(x => {
                 var vm = new VariableViewModel(x);
-                vm.Deleted += VariableDeleted;
                 return vm;
             }));
             var addButton = new ButtonViewModel();
@@ -48,9 +48,9 @@ namespace EnvironmentControl.ViewModels {
             Notify(nameof(Items), nameof(Top), nameof(Left));
         }
 
-        private async void VariableDeleted(VariableViewModel vm) {
-            var deletedItem = Items.Single(x => x.Equals(vm));
-            await Service.DeleteVariable(vm.Name);
+        private async void VariableDeleted(VariableDeletedMessage arg) {
+            var deletedItem = Items.Single(x => x is VariableViewModel vm && vm.Name == arg.Name);
+            await Service.DeleteVariable(arg.Name);
             Items.Remove(deletedItem);
         }
 
