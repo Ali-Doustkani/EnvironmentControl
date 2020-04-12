@@ -31,11 +31,11 @@ namespace EnvironmentControl.ViewModels {
                 if (_state == State.Editing) {
                     var result = Dialog.ShowValueEditor(_value);
                     if (result.Accepted) {
-                        if (result.Status == ValueEditStatus.Edited) {
-                            _value = _variable.UpdateValue(_value, result.Title, result.ActualValue);
+                        if (result.Status == EditStatus.Edited) {
+                            _value = _variable.UpdateValue(_value, result["Title"], result["ActualValue"]);
                             Notify(nameof(Title), nameof(ActualValue));
                         }
-                        else if (result.Status == ValueEditStatus.Deleted) {
+                        else if (result.Status == EditStatus.Deleted) {
                             ValueDeleted?.Invoke(_value);
                         }
                         Service.SaveVariable(_variable);

@@ -35,7 +35,7 @@ namespace EnvironmentControl.ViewModels {
         private void CommandMade() {
             var result = Dialog.ShowValueEditor();
             if (result.Accepted) {
-                var newValue = new Value(result.Title, result.ActualValue);
+                var newValue = new Value(result["Title"], result["ActualValue"]);
                 var item = new RadioViewModel(_variable, newValue, false);
                 _variable.Values.Add(newValue);
                 _values.Insert(_values.Count - 1, item);
@@ -62,6 +62,7 @@ namespace EnvironmentControl.ViewModels {
             button.CommandMade += CommandMade;
             list.Add(button);
             _values = new ObservableCollection<ITypedViewModel>(list);
+            Notify(nameof(Values));
         }
 
         private void ValueDeleted(Value deletedValue) {

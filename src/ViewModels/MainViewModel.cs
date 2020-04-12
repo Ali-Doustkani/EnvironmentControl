@@ -1,4 +1,7 @@
-﻿using EnvironmentControl.Common;
+﻿using System.Collections.Generic;
+using EnvironmentControl.Common;
+using EnvironmentControl.Domain;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -20,7 +23,7 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand Edit { get; }
 
-        public ITypedViewModel[] Items { get; private set; }
+        public ObservableCollection<ITypedViewModel> Items { get; private set; }
 
         public string EditText => _state == State.Editing ? "End Editing" : "Edit";
 
@@ -32,10 +35,24 @@ namespace EnvironmentControl.ViewModels {
             var result = await Service.Load();
             Top = result.Top;
             Left = result.Left;
-            var items = result.Variables.Select(x => new VariableViewModel(x)).Cast<ITypedViewModel>().ToList();
-            items.Add(new ButtonViewModel());
-            Items = items.ToArray();
+            var list = new List<ITypedViewModel>();
+            list.AddRange(result.Variables.Select(x => new VariableViewModel(x)));
+            var addButton = new ButtonViewModel();
+            addButton.CommandMade += CommandMade;
+            list.Add(addButton);
+            Items = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Items), nameof(Top), nameof(Left));
+        }
+
+        private void CommandMade() {
+            var result = Dialog.ShowVariableEditor();
+            if (result.Accepted) {
+                var newVariable = new Variable(result["Name"]);
+                var vm = new VariableViewModel(newVariable);
+                vm.SetState(_state);
+                Items.Insert(Items.Count - 1, vm);
+                Service.SaveVariable(newVariable);
+            }
         }
 
         private async Task DoClosing() {

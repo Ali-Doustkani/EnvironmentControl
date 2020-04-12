@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace EnvironmentControl.Domain {
     public class Variable {
+        public Variable(string name)
+            : this(name, new List<Value>()) { }
+
+        [JsonConstructor]
         public Variable(string name, List<Value> values) {
             Name = name;
             Values = values;
