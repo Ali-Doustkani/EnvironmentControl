@@ -15,6 +15,8 @@ namespace EnvironmentControl.ViewModels {
         private bool _selected;
         private State _state;
 
+        public string VariableName => _variable.Name;
+
         public int Type => 1;
 
         public string Title => _value.Title;
@@ -28,10 +30,12 @@ namespace EnvironmentControl.ViewModels {
                     var result = Dialog.ShowValueEditor(_value);
                     if (result.Accepted) {
                         if (result.Status == EditStatus.Edited) {
+                            if (_selected && result["ActualValue"] != _value.ActualValue) {
+                                _selected = false;
+                            }
                             _value = _variable.UpdateValue(_value, result["Title"], result["ActualValue"]);
                             Notify(nameof(Title), nameof(ActualValue));
-                        }
-                        else if (result.Status == EditStatus.Deleted) {
+                        } else if (result.Status == EditStatus.Deleted) {
                             Mediator.Publish(new ValueDeletedMessage(_value.Title));
                         }
                         Service.SaveVariable(_variable);

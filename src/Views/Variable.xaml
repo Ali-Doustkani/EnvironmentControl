@@ -4,7 +4,7 @@
              xmlns:views="clr-namespace:EnvironmentControl.Views">
     <UserControl.Resources>
         <DataTemplate x:Key="SelectionValue">
-            <RadioButton GroupName="{Binding Name}" IsChecked="{Binding Selected}">
+            <RadioButton GroupName="{Binding VariableName}" IsChecked="{Binding Selected}">
                 <RadioButton.Template>
                     <ControlTemplate TargetType="RadioButton">
                         <Border Name="Border" Padding="9" CornerRadius="3" Background="{StaticResource ValueBackground}">
