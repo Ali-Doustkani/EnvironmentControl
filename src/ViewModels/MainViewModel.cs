@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using EnvironmentControl.States;
+using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class MainViewModel : ViewModel {
@@ -26,7 +28,7 @@ namespace EnvironmentControl.ViewModels {
 
         public ObservableCollection<ITypedViewModel> Items { get; private set; }
 
-        public string EditText => _stateManager.Current.State == State.Editing ? "End Editing" : "Edit";
+        public string EditText => _stateManager.Current.EditStatus == EditStatus.Editing ? "End Editing" : "Edit";
 
         public double Top { get; set; }
 
@@ -75,7 +77,7 @@ namespace EnvironmentControl.ViewModels {
 
     public static class Actions {
         public static AppState ChangeEditState(AppState current) {
-            return new AppState(current.State == State.Normal ? State.Editing : State.Normal);
+            return new AppState(current.EditStatus == EditStatus.Normal ? EditStatus.Editing : EditStatus.Normal);
         }
     }
 }

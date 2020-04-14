@@ -1,5 +1,6 @@
 ﻿using EnvironmentControl.Common;
 using EnvironmentControl.Services;
+using EnvironmentControl.States;
 
 namespace EnvironmentControl.ViewModels {
     public class ServiceLocator : IServiceLocator {

@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using EnvironmentControl.States;
+using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel, ITypedViewModel {
@@ -21,7 +23,7 @@ namespace EnvironmentControl.ViewModels {
 
         public string Name => _variable.Name;
 
-        public Visibility Visibility => _stateManager.Current.State == State.Editing ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility Visibility => _stateManager.Current.EditStatus == EditStatus.Editing ? Visibility.Visible : Visibility.Collapsed;
 
         public ICommand DeleteVariable { get; }
 

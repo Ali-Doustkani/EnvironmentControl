@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace EnvironmentControl.ViewModels {
+namespace EnvironmentControl.States {
     public class StateManager {
         private AppState _current;
 
         public StateManager() {
-            Current = new AppState(State.Normal);
+            Current = new AppState(EditStatus.Normal);
         }
 
         public event Action<AppState> StateChanged;

@@ -1,5 +1,7 @@
 ﻿using EnvironmentControl.Common;
 using EnvironmentControl.Domain;
+using EnvironmentControl.States;
+using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class RadioViewModel : ViewModel, ITypedViewModel {
@@ -27,16 +29,16 @@ namespace EnvironmentControl.ViewModels {
         public bool Selected {
             get => _selected;
             set {
-                if (_stateManager.Current.State == State.Editing) {
+                if (_stateManager.Current.EditStatus == EditStatus.Editing) {
                     var result = Dialog.ShowValueEditor(_value);
                     if (result.Accepted) {
-                        if (result.Status == EditStatus.Edited) {
+                        if (result.Status == Common.EditStatus.Edited) {
                             if (_selected && result["ActualValue"] != _value.ActualValue) {
                                 _selected = false;
                             }
                             _value = _variable.UpdateValue(_value, result["Title"], result["ActualValue"]);
                             Notify(nameof(Title), nameof(ActualValue));
-                        } else if (result.Status == EditStatus.Deleted) {
+                        } else if (result.Status == Common.EditStatus.Deleted) {
                             Mediator.Publish(new ValueDeletedMessage(_value.Title));
                         }
                         Service.SaveVariable(_variable);

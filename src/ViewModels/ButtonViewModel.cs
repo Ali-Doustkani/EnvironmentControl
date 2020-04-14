@@ -2,6 +2,8 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using EnvironmentControl.States;
+using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class ButtonViewModel : ViewModel, ITypedViewModel {
@@ -19,7 +21,7 @@ namespace EnvironmentControl.ViewModels {
 
         public Visibility Visibility {
             get {
-                if (_stateManager.Current.State == State.Editing)
+                if (_stateManager.Current.EditStatus == EditStatus.Editing)
                     return Visibility.Visible;
                 return Visibility.Collapsed;
             }

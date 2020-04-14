@@ -6,6 +6,7 @@ using NSubstitute;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using EnvironmentControl.Services;
+using EnvironmentControl.States;
 using Xunit;
 
 namespace EnvironmentControl.Tests.ViewModels {
