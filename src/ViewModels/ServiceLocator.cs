@@ -1,5 +1,6 @@
 ﻿using EnvironmentControl.Common;
 using EnvironmentControl.Services;
+using EnvironmentControl.States;
 
 namespace EnvironmentControl.ViewModels {
     public class ServiceLocator : IServiceLocator {
@@ -28,6 +29,12 @@ namespace EnvironmentControl.ViewModels {
         public Mediator Mediator {
             get => _mediator ??= new Mediator();
             set => _mediator = value;
+        }
+
+        private StateManager _stateManager;
+        public StateManager StateManager {
+            get => _stateManager ??= new StateManager();
+            set => _stateManager = value;
         }
     }
 }

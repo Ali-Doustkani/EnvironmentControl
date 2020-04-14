@@ -2,11 +2,13 @@
 using System.Windows;
 using EnvironmentControl.ViewModels;
 using System.Windows.Input;
+using EnvironmentControl.States;
 
 namespace EnvironmentControl.Views {
     public partial class MainWindow {
         public MainWindow() {
             InitializeComponent();
+            DataContext = new MainViewModel(new StateManager());
         }
 
         private MainViewModel ViewModel() => (MainViewModel)DataContext;

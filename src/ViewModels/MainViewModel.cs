@@ -5,18 +5,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using EnvironmentControl.States;
+using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class MainViewModel : ViewModel {
-        public MainViewModel() {
+        public MainViewModel(StateManager stateManager) {
             Load = new RelayCommand(DoLoad);
             Closing = new RelayCommand(DoClosing);
             Edit = new RelayCommand(DoEdit);
-            _state = State.Normal;
             Mediator.Subscribe<VariableDeletedMessage>(VariableDeleted);
+            _stateManager = stateManager;
         }
 
-        private State _state;
+        private readonly StateManager _stateManager;
 
         public ICommand Load { get; }
 
@@ -26,7 +28,7 @@ namespace EnvironmentControl.ViewModels {
 
         public ObservableCollection<ITypedViewModel> Items { get; private set; }
 
-        public string EditText => _state == State.Editing ? "End Editing" : "Edit";
+        public string EditText => _stateManager.Current.EditStatus == EditStatus.Editing ? "End Editing" : "Edit";
 
         public double Top { get; set; }
 
@@ -38,10 +40,10 @@ namespace EnvironmentControl.ViewModels {
             Left = result.Left;
             var list = new List<ITypedViewModel>();
             list.AddRange(result.Variables.Select(x => {
-                var vm = new VariableViewModel(x);
+                var vm = new VariableViewModel(_stateManager, x);
                 return vm;
             }));
-            var addButton = new ButtonViewModel(AddButtonClicked);
+            var addButton = new ButtonViewModel(_stateManager, AddButtonClicked);
             list.Add(addButton);
             Items = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Items), nameof(Top), nameof(Left));
@@ -58,9 +60,7 @@ namespace EnvironmentControl.ViewModels {
             if (result.Accepted) {
                 var newVariable = new Variable(result["Name"]);
                 newVariable.AddValue("Default", Service.GetVariable(result["Name"]));
-                var vm = new VariableViewModel(newVariable);
-                vm.SetState(_state);
-                Items.Insert(Items.Count - 1, vm);
+                Items.Insert(Items.Count - 1, new VariableViewModel(_stateManager, newVariable));
                 Service.SaveVariable(newVariable);
             }
         }
@@ -70,11 +70,14 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private void DoEdit() {
-            _state = _state == State.Normal ? State.Editing : State.Normal;
-            foreach (var item in Items) {
-                item.SetState(_state);
-            }
+            _stateManager.SetState(Actions.ChangeEditState);
             Notify(nameof(EditText));
+        }
+    }
+
+    public static class Actions {
+        public static AppState ChangeEditState(AppState current) {
+            return new AppState(current.EditStatus == EditStatus.Normal ? EditStatus.Editing : EditStatus.Normal);
         }
     }
 }
