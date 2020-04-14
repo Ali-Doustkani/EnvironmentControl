@@ -8,18 +8,20 @@ using System.Windows.Input;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel, ITypedViewModel {
-        public VariableViewModel(Variable variable) {
+        public VariableViewModel(StateManager stateManager, Variable variable) {
             _variable = variable;
             DeleteVariable = new RelayCommand(() => Mediator.Publish(new VariableDeletedMessage(Name)));
             Mediator.Subscribe<ValueDeletedMessage>(ValueDeleted);
+            _stateManager = stateManager;
+            stateManager.StateChanged += StateChanged;
         }
 
+        private readonly StateManager _stateManager;
         private readonly Variable _variable;
-        private State _state;
 
         public string Name => _variable.Name;
 
-        public Visibility Visibility => _state == State.Editing ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility Visibility => _stateManager.Current.State == State.Editing ? Visibility.Visible : Visibility.Collapsed;
 
         public ICommand DeleteVariable { get; }
 
@@ -35,23 +37,15 @@ namespace EnvironmentControl.ViewModels {
 
         public int Type => 1;
 
-        public void SetState(State state) {
-            _state = state;
-            foreach (var value in Values) {
-                value.SetState(state);
-            }
-            Notify(nameof(Visibility));
-        }
-
         private void FillValues() {
             var list = new List<ITypedViewModel>();
             var selectedValue = Service.GetVariable(_variable.Name);
             RadioViewModel CreateRadio(Value x) {
-                var ret = new RadioViewModel(_variable, x, x.ActualValue == selectedValue);
+                var ret = new RadioViewModel(_stateManager, _variable, x, x.ActualValue == selectedValue);
                 return ret;
             }
             list.AddRange(_variable.Values.Select(CreateRadio));
-            list.Add( new ButtonViewModel(AddButtonClicked));
+            list.Add(new ButtonViewModel(_stateManager, AddButtonClicked));
             _values = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Values));
         }
@@ -60,7 +54,7 @@ namespace EnvironmentControl.ViewModels {
             var result = Dialog.ShowValueEditor();
             if (result.Accepted) {
                 var newValue = new Value(result["Title"], result["ActualValue"]);
-                var item = new RadioViewModel(_variable, newValue, false);
+                var item = new RadioViewModel(_stateManager, _variable, newValue, false);
                 _variable.Values.Add(newValue);
                 _values.Insert(_values.Count - 1, item);
                 Service.SaveVariable(_variable);
@@ -74,6 +68,9 @@ namespace EnvironmentControl.ViewModels {
             Service.SaveVariable(_variable);
             Notify(nameof(Values));
         }
-    }
 
+        private void StateChanged(AppState obj) {
+            Notify(nameof(Visibility));
+        }
+    }
 }

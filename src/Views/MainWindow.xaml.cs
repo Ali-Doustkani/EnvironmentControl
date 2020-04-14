@@ -7,6 +7,7 @@ namespace EnvironmentControl.Views {
     public partial class MainWindow {
         public MainWindow() {
             InitializeComponent();
+            DataContext = new MainViewModel(new StateManager());
         }
 
         private MainViewModel ViewModel() => (MainViewModel)DataContext;

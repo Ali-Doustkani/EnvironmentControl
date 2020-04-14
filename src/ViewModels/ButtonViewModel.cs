@@ -5,12 +5,13 @@ using System.Windows.Input;
 
 namespace EnvironmentControl.ViewModels {
     public class ButtonViewModel : ViewModel, ITypedViewModel {
-        public ButtonViewModel(Action onClick) {
+        public ButtonViewModel(StateManager stateManager, Action onClick) {
+            _stateManager = stateManager;
+            _stateManager.StateChanged += StateChanged;
             Command = new RelayCommand(onClick);
-            _state = State.Normal;
         }
 
-        private State _state;
+        private readonly StateManager _stateManager;
 
         public int Type => 2;
 
@@ -18,15 +19,12 @@ namespace EnvironmentControl.ViewModels {
 
         public Visibility Visibility {
             get {
-                if (_state == State.Editing)
+                if (_stateManager.Current.State == State.Editing)
                     return Visibility.Visible;
                 return Visibility.Collapsed;
             }
         }
 
-        public void SetState(State state) {
-            _state = state;
-            Notify(nameof(Visibility));
-        }
+        private void StateChanged(AppState obj) => Notify(nameof(Visibility));
     }
 }

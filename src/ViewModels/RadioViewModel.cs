@@ -3,17 +3,18 @@ using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.ViewModels {
     public class RadioViewModel : ViewModel, ITypedViewModel {
-        public RadioViewModel(Variable variable, Value value, bool selected) {
+        public RadioViewModel(StateManager stateManager, Variable variable, Value value, bool selected) {
+            _stateManager = stateManager;
             _variable = variable;
             _value = value;
             _selected = selected;
-            _state = State.Normal;
         }
 
+        private readonly StateManager _stateManager;
         private readonly Variable _variable;
         private Value _value;
         private bool _selected;
-        private State _state;
+
 
         public string VariableName => _variable.Name;
 
@@ -26,7 +27,7 @@ namespace EnvironmentControl.ViewModels {
         public bool Selected {
             get => _selected;
             set {
-                if (_state == State.Editing) {
+                if (_stateManager.Current.State == State.Editing) {
                     var result = Dialog.ShowValueEditor(_value);
                     if (result.Accepted) {
                         if (result.Status == EditStatus.Edited) {
@@ -46,10 +47,6 @@ namespace EnvironmentControl.ViewModels {
                     Service.SetVariable(_variable.Name, _value.ActualValue);
                 _selected = value;
             }
-        }
-
-        public void SetState(State state) {
-            _state = state;
         }
     }
 }

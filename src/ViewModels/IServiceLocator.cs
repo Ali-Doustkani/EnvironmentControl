@@ -6,5 +6,6 @@ namespace EnvironmentControl.ViewModels {
         IService Service { get; }
         IDialogService Dialog { get; }
         Mediator Mediator { get; }
+        StateManager StateManager { get; }
     }
 }

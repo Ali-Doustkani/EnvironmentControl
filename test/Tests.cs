@@ -11,7 +11,7 @@ using Xunit;
 namespace EnvironmentControl.Tests.ViewModels {
     public class Tests {
         public Tests() {
-            _main = new MainViewModel();
+            _main = new MainViewModel(new StateManager() );
             _service = new MockService();
             _dialog = Substitute.For<IDialogService>();
             var mediator = new Mediator();
@@ -19,7 +19,6 @@ namespace EnvironmentControl.Tests.ViewModels {
             ServiceLocator.Instance.Service.Returns(_service);
             ServiceLocator.Instance.Dialog.Returns(_dialog);
             ServiceLocator.Instance.Mediator.Returns(mediator);
-            _main.Load.Execute(null);
         }
 
         private readonly MainViewModel _main;
@@ -28,6 +27,7 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Load_saved_values_on_load() {
+            Load();
             _main.Items.Should().HaveCount(2);
             GetValue(0, 0).Should().BeEquivalentTo(new Value("first", "a"));
             GetValue(0, 1).Should().BeEquivalentTo(new Value("second", "b"));
@@ -35,18 +35,21 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
+            Load();
             ClickOn(0, 0);
             _service.GetVariable("myVar").Should().Be("a");
         }
 
         [Fact]
         public void Select_the_current_value_on_load() {
+            Load();
             GetValue(0, 0).Selected.Should().BeTrue();
         }
 
         [Fact]
         public void Select_nothing_if_the_current_value_is_not_available() {
             _service.SetVariable("myVar", "c");
+            Load();
             GetValue(0, 0).Selected.Should().BeFalse();
         }
 
@@ -59,6 +62,7 @@ namespace EnvironmentControl.Tests.ViewModels {
                     {"ActualValue", "c" }
 
                 }));
+            Load();
 
             ClickOn(0, 2);
 
@@ -76,6 +80,7 @@ namespace EnvironmentControl.Tests.ViewModels {
                     {"Title", "first2" },
                     {"ActualValue", "a2" }
                 }));
+            Load();
 
             _main.Edit.Execute(null);
             ClickOn(0, 0);
@@ -90,6 +95,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         [Fact]
         public void Delete_a_value() {
             _dialog.ShowValueEditor(Arg.Any<Value>()).Returns(DialogResult.Deleted());
+            Load();
 
             _main.Edit.Execute(null);
             ClickOn(0, 0);
@@ -105,6 +111,7 @@ namespace EnvironmentControl.Tests.ViewModels {
         public void Add_a_variable() {
             _dialog.ShowVariableSelector().Returns(DialogResult.Added(new Dictionary<string, string> { { "Name", "JAVA_HOME" } }));
             _service.SetVariable("JAVA_HOME", "defaultValue");
+            Load();
 
             _main.Edit.Execute(null);
             ClickOn(1);
@@ -118,6 +125,15 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         private Db Db => _service.Db;
 
+        private void Load() {
+            _main.Load.Execute(null);
+            foreach (var item in _main.Items) {
+                if (item is VariableViewModel variable) {
+                    ObservableCollection<ITypedViewModel> values = variable.Values;
+                }
+            }
+        }
+
         private void ClickOn(int variableIndex, int valueIndex = -1) {
             if (valueIndex == -1) {
                 ((ButtonViewModel)_main.Items[variableIndex]).Command.Execute(null);
@@ -127,13 +143,12 @@ namespace EnvironmentControl.Tests.ViewModels {
             var value = ((VariableViewModel)_main.Items[variableIndex]).Values[valueIndex];
             if (value is RadioViewModel radio) {
                 radio.Selected = true;
-            }
-            else if (value is ButtonViewModel button) {
+            } else if (value is ButtonViewModel button) {
                 button.Command.Execute(null);
             }
         }
 
-        private VariableViewModel GetVariable(int index) => (VariableViewModel) _main.Items[index];
+        private VariableViewModel GetVariable(int index) => (VariableViewModel)_main.Items[index];
 
         private ObservableCollection<ITypedViewModel> GetValues(int index) => ((VariableViewModel)_main.Items[index]).Values;
 

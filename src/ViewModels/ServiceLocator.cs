@@ -29,5 +29,11 @@ namespace EnvironmentControl.ViewModels {
             get => _mediator ??= new Mediator();
             set => _mediator = value;
         }
+
+        private StateManager _stateManager;
+        public StateManager StateManager {
+            get => _stateManager ??= new StateManager();
+            set => _stateManager = value;
+        }
     }
 }
