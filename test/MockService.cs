@@ -29,7 +29,8 @@ namespace EnvironmentControl.Tests {
             return _environmentVariables[name];
         }
 
-        public string[] GetVariables() => _environmentVariables.Keys.ToArray();
+        public WindowsVariable[] GetVariables() =>
+            _environmentVariables.Keys.Select(x => new WindowsVariable(Type.System, x)).ToArray();
 
         public Task<LoadResult> Load() {
             var str = JsonConvert.SerializeObject(Db);
@@ -47,8 +48,7 @@ namespace EnvironmentControl.Tests {
             var existing = Db.Variables.SingleOrDefault(x => x.Name == variable.Name);
             if (existing == null) {
                 Db.Variables.Add(variable);
-            }
-            else {
+            } else {
 
                 Db.Variables.Insert(Db.Variables.IndexOf(existing), variable);
                 Db.Variables.Remove(existing);
