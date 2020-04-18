@@ -43,7 +43,7 @@ namespace EnvironmentControl.Services {
 
         public async Task<LoadResult> Load() {
             var access = await _factory.Create();
-            return LoadResult.Successful(access.Db.Environment.Variables, access.Db.Top, access.Db.Left);
+            return new LoadResult(access.Db.Environment.Variables, access.Db.Top, access.Db.Left);
         }
 
         public async Task SaveCoordination(double top, double left) {

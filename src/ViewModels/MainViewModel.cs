@@ -38,10 +38,7 @@ namespace EnvironmentControl.ViewModels {
             Top = result.Top;
             Left = result.Left;
             var list = new List<ITypedViewModel>();
-            list.AddRange(result.Variables.Select(x => {
-                var vm = new VariableViewModel(_stateManager, x.Name);
-                return vm;
-            }));
+            list.AddRange(result.Variables.Select(x => new VariableViewModel(_stateManager, x.Name)));
             var addButton = new ButtonViewModel(_stateManager, AddButtonClicked);
             list.Add(addButton);
             Items = new ObservableCollection<ITypedViewModel>(list);
