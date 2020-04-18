@@ -1,5 +1,6 @@
 ﻿using EnvironmentControl.Common;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using EnvironmentControl.States;
@@ -7,7 +8,7 @@ using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class ButtonViewModel : ViewModel, ITypedViewModel {
-        public ButtonViewModel(StateManager stateManager, Action onClick) {
+        public ButtonViewModel(StateManager stateManager, Func<Task> onClick) {
             _stateManager = stateManager;
             _stateManager.StateChanged += StateChanged;
             Command = new RelayCommand(onClick);

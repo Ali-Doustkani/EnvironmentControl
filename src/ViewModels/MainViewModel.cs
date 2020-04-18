@@ -1,5 +1,4 @@
 ﻿using EnvironmentControl.Common;
-using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -55,13 +54,11 @@ namespace EnvironmentControl.ViewModels {
             Items.Remove(deletedItem);
         }
 
-        private void AddButtonClicked() {
+        private async Task AddButtonClicked() {
             var result = Dialog.ShowVariableSelector();
             if (result.Accepted) {
-                var newVariable = new Variable(result["Name"]);
-                newVariable.AddValue(1, "Default", Service.GetValueOf(result["Name"]));
-                Items.Insert(Items.Count - 1, new VariableViewModel(_stateManager, newVariable.Name));
-                Service.SaveVariable(newVariable);
+                await Service.AddVariable(result["Name"]);
+                Items.Insert(Items.Count - 1, new VariableViewModel(_stateManager, result["Name"]));
             }
         }
 

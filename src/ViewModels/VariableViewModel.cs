@@ -42,7 +42,7 @@ namespace EnvironmentControl.ViewModels {
                 return ret;
             }
             list.AddRange((await Service.GetValuesOf(Name)).Select(CreateRadio));
-            list.Add(new ButtonViewModel(_stateManager, async () => await AddButtonClicked()));
+            list.Add(new ButtonViewModel(_stateManager, AddButtonClicked));
             Values = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Values));
         }

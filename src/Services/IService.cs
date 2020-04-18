@@ -18,5 +18,6 @@ namespace EnvironmentControl.Services {
         Task<int> AddValue(string variableName, string title, string actualValue);
         Task<IEnumerable<dynamic>> GetValuesOf(string variableName);
         Task<dynamic> GetValue(string variableName, int id);
+        Task AddVariable(string name);
     }
 }

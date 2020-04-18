@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EnvironmentControl.Domain;
+using EnvironmentControl.ViewModels;
 
 namespace EnvironmentControl.Services {
     public class Service : IService {
@@ -115,6 +116,12 @@ namespace EnvironmentControl.Services {
         public async Task<dynamic> GetValue(string variableName, int id) {
             var db = await ReadDb();
             return db.Variables.Single(x => x.Name == variableName).Values.Single(x => x.Id == id);
+        }
+
+        public async Task AddVariable(string name) {
+            var newVariable = new Variable(name);
+            newVariable.AddValue(1, "Default", GetValueOf(name));
+            await SaveVariable(newVariable);
         }
 
         private async Task<Db> ReadDb() {
