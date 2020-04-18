@@ -5,15 +5,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyName>Environment Control</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icon.ico" />
     <None Remove="Resources\Fonts\BalooTamma2-Bold.ttf" />
     <None Remove="Resources\Fonts\BalooTamma2-ExtraBold.ttf" />
     <None Remove="Resources\Fonts\BalooTamma2-Medium.ttf" />
     <None Remove="Resources\Fonts\BalooTamma2-Regular.ttf" />
     <None Remove="Resources\Fonts\BalooTamma2-SemiBold.ttf" />
-    <None Remove="Resources\icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,12 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="icon.ico" />
     <Resource Include="Resources\Fonts\BalooTamma2-Bold.ttf" />
     <Resource Include="Resources\Fonts\BalooTamma2-ExtraBold.ttf" />
     <Resource Include="Resources\Fonts\BalooTamma2-Medium.ttf" />
     <Resource Include="Resources\Fonts\BalooTamma2-Regular.ttf" />
     <Resource Include="Resources\Fonts\BalooTamma2-SemiBold.ttf" />
-    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
 
 </Project>

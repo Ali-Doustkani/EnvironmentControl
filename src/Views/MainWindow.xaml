@@ -62,7 +62,7 @@
             </Grid>
         </Border>
         <tb:TaskbarIcon ToolTipText="Environment Control"
-                        IconSource="/Resources/icon.ico"
+                        IconSource="/icon.ico"
                         MenuActivation="RightClick"
                         ContextMenu="{StaticResource TrayMenu}"
                         TrayLeftMouseUp="Show"/>
