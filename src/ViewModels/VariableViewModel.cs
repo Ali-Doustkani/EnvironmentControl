@@ -36,9 +36,8 @@ namespace EnvironmentControl.ViewModels {
 
         private async Task FillValues() {
             var list = new List<ITypedViewModel>();
-            var selectedValue = Service.GetValueOf(Name);
             RadioViewModel CreateRadio(dynamic x) {
-                var ret = new RadioViewModel(_stateManager, x.ActualValue == selectedValue, Name, x.Id, x.Title, x.ActualValue);
+                var ret = new RadioViewModel(_stateManager, Service.IsSet(Name, x.ActualValue), Name, x.Id, x.Title, x.ActualValue);
                 return ret;
             }
             list.AddRange((await Service.GetValuesOf(Name)).Select(CreateRadio));

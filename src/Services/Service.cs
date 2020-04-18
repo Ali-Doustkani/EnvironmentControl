@@ -12,18 +12,11 @@ namespace EnvironmentControl.Services {
 
         private readonly IDataAccessFactory _factory;
 
-        public void SetVariable(string name, string value) {
+        public void SetVariable(string name, string value) => 
             System.Environment.SetEnvironmentVariable(name, value, System.EnvironmentVariableTarget.Machine);
-        }
 
-        public string GetValueOf(string variableName) {
-            return System.Environment.GetEnvironmentVariable(variableName, System.EnvironmentVariableTarget.Machine);
-        }
-
-        public async Task<Variable> GetVariable(string variableName) {
-            var access = await _factory.Create();
-            return access.Db.Environment.Find(variableName);
-        }
+        public bool IsSet(string variableName, string expectedValue) =>
+            System.Environment.GetEnvironmentVariable(variableName, System.EnvironmentVariableTarget.Machine) == expectedValue;
 
         public WindowsVariable[] GetVariables() {
             var ret = System.Environment.GetEnvironmentVariables(System.EnvironmentVariableTarget.User)
@@ -95,7 +88,8 @@ namespace EnvironmentControl.Services {
 
         public async Task AddVariable(string name) {
             var access = await _factory.Create();
-            access.Db.Environment.Add(name, GetValueOf(name));
+            var val = System.Environment.GetEnvironmentVariable(name, System.EnvironmentVariableTarget.Machine);
+            access.Db.Environment.Add(name, val);
             await access.SaveChanges();
         }
     }

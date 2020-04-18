@@ -5,7 +5,7 @@ using EnvironmentControl.Domain;
 namespace EnvironmentControl.Services {
     public interface IService {
         void SetVariable(string name, string value);
-        string GetValueOf(string variableName);
+        bool IsSet(string variableName, string expectedValue);
         WindowsVariable[] GetVariables();
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);

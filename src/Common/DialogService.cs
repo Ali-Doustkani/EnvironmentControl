@@ -1,5 +1,4 @@
-﻿using EnvironmentControl.Domain;
-using EnvironmentControl.ViewModels;
+﻿using EnvironmentControl.ViewModels;
 using EnvironmentControl.Views;
 using System;
 using System.Collections.Generic;
@@ -12,21 +11,15 @@ namespace EnvironmentControl.Common {
             var viewModel = new ValueEditorViewModel(false, variableName);
             var view = new ValueEditor { DataContext = viewModel };
             var result = view.ShowDialog();
-            if (result == true) {
-                return DialogResult.Added(viewModel.ToDictionary());
-            }
-            return DialogResult.Failed();
+            return result == true ? DialogResult.Added(viewModel.ToDictionary()) : DialogResult.Failed();
         }
 
         public DialogResult ShowValueEditor(string variableName, int valueId) {
             var ctx = new ValueEditorViewModel(true, variableName, valueId);
             var view = new ValueEditor { DataContext = ctx };
             var result = view.ShowDialog();
-            if (result == true) {
-                if (ctx.Deleted)
-                    return DialogResult.Deleted();
-                return DialogResult.Edited(ctx.ToDictionary());
-            }
+            if (result == true)
+                return ctx.Deleted ? DialogResult.Deleted() : DialogResult.Edited(ctx.ToDictionary());
             return DialogResult.Failed();
         }
 
@@ -35,10 +28,7 @@ namespace EnvironmentControl.Common {
             var vm = new VariableSelectorViewModel();
             view.DataContext = vm;
             var result = view.ShowDialog();
-            if (result == true) {
-                return DialogResult.Added(new Dictionary<string, string> { { "Name", vm.SelectedVariable.Name } });
-            }
-            return DialogResult.Failed();
+            return result == true ? DialogResult.Added(new Dictionary<string, string> { { "Name", vm.SelectedVariable.Name } }) : DialogResult.Failed();
         }
 
         public void Error(string message) => MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
