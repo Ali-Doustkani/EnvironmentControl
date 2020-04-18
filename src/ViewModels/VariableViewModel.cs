@@ -26,17 +26,13 @@ namespace EnvironmentControl.ViewModels {
 
         public ICommand DeleteVariable { get; }
 
-        private ObservableCollection<ITypedViewModel> _values;
-        public ObservableCollection<ITypedViewModel> Values {
-            get {
-                if (_values == null) {
-                    FillValues().Wait(); //todo: bad practice
-                }
-                return _values;
-            }
-        }
+        public ObservableCollection<ITypedViewModel> Values { get; private set; }
 
         public int Type => 1;
+
+        public async Task Load() {
+            await FillValues();
+        }
 
         private async Task FillValues() {
             var list = new List<ITypedViewModel>();
@@ -47,7 +43,7 @@ namespace EnvironmentControl.ViewModels {
             }
             list.AddRange((await Service.GetValuesOf(Name)).Select(CreateRadio));
             list.Add(new ButtonViewModel(_stateManager, async () => await AddButtonClicked()));
-            _values = new ObservableCollection<ITypedViewModel>(list);
+            Values = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Values));
         }
 
@@ -56,7 +52,7 @@ namespace EnvironmentControl.ViewModels {
             if (result.Accepted) {
                 var id = await Service.AddValue(Name, result["Title"], result["ActualValue"]);
                 var item = new RadioViewModel(_stateManager, false, Name, id, result["Title"], result["ActualValue"]);
-                _values.Insert(_values.Count - 1, item);
+                Values.Insert(Values.Count - 1, item);
             }
         }
 
