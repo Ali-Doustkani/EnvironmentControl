@@ -40,7 +40,7 @@ namespace EnvironmentControl.ViewModels {
             Left = result.Left;
             var list = new List<ITypedViewModel>();
             list.AddRange(result.Variables.Select(x => {
-                var vm = new VariableViewModel(_stateManager, x);
+                var vm = new VariableViewModel(_stateManager, x.Name);
                 return vm;
             }));
             var addButton = new ButtonViewModel(_stateManager, AddButtonClicked);
@@ -60,7 +60,7 @@ namespace EnvironmentControl.ViewModels {
             if (result.Accepted) {
                 var newVariable = new Variable(result["Name"]);
                 newVariable.AddValue(1, "Default", Service.GetValueOf(result["Name"]));
-                Items.Insert(Items.Count - 1, new VariableViewModel(_stateManager, newVariable));
+                Items.Insert(Items.Count - 1, new VariableViewModel(_stateManager, newVariable.Name));
                 Service.SaveVariable(newVariable);
             }
         }

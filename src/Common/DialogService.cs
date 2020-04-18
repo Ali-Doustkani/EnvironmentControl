@@ -18,8 +18,9 @@ namespace EnvironmentControl.Common {
             return DialogResult.Failed();
         }
 
-        public DialogResult ShowValueEditor(string variableName, Value value) {
-            var ctx = new ValueEditorViewModel(true, variableName, value.Id) { Title = value.Title, ActualValue = value.ActualValue };
+        public DialogResult ShowValueEditor(string variableName, int valueId) {
+            //todo: load value title and actual value from db
+            var ctx = new ValueEditorViewModel(true, variableName, valueId) { Title = "value.Title", ActualValue = "value.ActualValue" };
             var view = new ValueEditor { DataContext = ctx };
             var result = view.ShowDialog();
             if (result == true) {

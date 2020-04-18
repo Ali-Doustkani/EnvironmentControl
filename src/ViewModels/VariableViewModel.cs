@@ -1,5 +1,4 @@
 ﻿using EnvironmentControl.Common;
-using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,8 +10,8 @@ using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableViewModel : ViewModel, ITypedViewModel {
-        public VariableViewModel(StateManager stateManager, Variable variable) {
-            _variable = variable;
+        public VariableViewModel(StateManager stateManager, string variableName) {
+            Name = variableName;
             DeleteVariable = new RelayCommand(() => Mediator.Publish(new VariableDeletedMessage(Name)));
             Mediator.Subscribe<ValueDeletedMessage>(ValueDeleted);
             _stateManager = stateManager;
@@ -20,9 +19,8 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private readonly StateManager _stateManager;
-        private readonly Variable _variable;
 
-        public string Name => _variable.Name;
+        public string Name { get; }
 
         public Visibility Visibility => _stateManager.Current.EditStatus == EditStatus.Editing ? Visibility.Visible : Visibility.Collapsed;
 
@@ -32,7 +30,7 @@ namespace EnvironmentControl.ViewModels {
         public ObservableCollection<ITypedViewModel> Values {
             get {
                 if (_values == null) {
-                    FillValues();
+                    FillValues().Wait(); //todo: bad practice
                 }
                 return _values;
             }
@@ -40,38 +38,34 @@ namespace EnvironmentControl.ViewModels {
 
         public int Type => 1;
 
-        private void FillValues() {
+        private async Task FillValues() {
             var list = new List<ITypedViewModel>();
-            var selectedValue = Service.GetValueOf(_variable.Name);
-            RadioViewModel CreateRadio(Value x) {
-                var ret = new RadioViewModel(_stateManager, _variable, x, x.ActualValue == selectedValue);
+            var selectedValue = Service.GetValueOf(Name);
+            RadioViewModel CreateRadio(dynamic x) {
+                var ret = new RadioViewModel(_stateManager, x.ActualValue == selectedValue, Name, x.Id, x.Title, x.ActualValue);
                 return ret;
             }
-            list.AddRange(_variable.Values.Select(CreateRadio));
+            list.AddRange((await Service.GetValuesOf(Name)).Select(CreateRadio));
             list.Add(new ButtonViewModel(_stateManager, async () => await AddButtonClicked()));
             _values = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Values));
         }
 
         private async Task AddButtonClicked() {
-            var result = Dialog.ShowValueEditor(_variable.Name);
+            var result = Dialog.ShowValueEditor(Name);
             if (result.Accepted) {
-                var newValue = await Service.CreateValue(_variable, result["Title"], result["ActualValue"]);
-                var item = new RadioViewModel(_stateManager, _variable, newValue, false);
-                _variable.Values.Add(newValue);
+                var id = await Service.AddValue(Name, result["Title"], result["ActualValue"]);
+                var item = new RadioViewModel(_stateManager, false, Name, id, result["Title"], result["ActualValue"]);
                 _values.Insert(_values.Count - 1, item);
-                await Service.SaveVariable(_variable);
             }
         }
 
-        private void ValueDeleted(ValueDeletedMessage msg) {
-            if (msg.VariableName != _variable.Name)
+        private async Task ValueDeleted(ValueDeletedMessage msg) {
+            if (msg.VariableName != Name)
                 return;
 
-            var toDelete = _variable.Values.Single(x => x.Title == msg.Title);
-            _variable.Values.Remove(toDelete);
-            FillValues();
-            Service.SaveVariable(_variable);
+            await Service.DeleteValue(Name, msg.Id);
+            await FillValues();
             Notify(nameof(Values));
         }
 

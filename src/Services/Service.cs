@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,6 +77,36 @@ namespace EnvironmentControl.Services {
             var toDelete = db.Variables.Single(x => x.Name == variableName);
             db.Variables.Remove(toDelete);
             await WriteDb(db);
+        }
+
+        public async Task DeleteValue(string variableName, int valueId) {
+            var db = await ReadDb();
+            var variable = db.Variables.Single(x => x.Name == variableName);
+            var toDelete = variable.Values.Single(x => x.Id == valueId);
+            variable.Values.Remove(toDelete);
+            await SaveVariable(variable);
+        }
+
+        public Task UpdateValue(int valueId, string newTitle, string newActualValue) {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> AddValue(string variableName, string title, string actualValue) {
+            var db = await ReadDb();
+            var variable = db.Variables.Single(x => x.Name == variableName);
+            var newValue = await CreateValue(variable, title, actualValue);
+            variable.Values.Add(newValue);
+            await SaveVariable(variable);
+            return newValue.Id;
+        }
+
+        public async Task<IEnumerable<dynamic>> GetValuesOf(string variableName) {
+            var db = await ReadDb();
+            return db
+                .Variables
+                .Single(x => x.Name == variableName)
+                .Values
+                .Select(x => new { x.Id, x.Title, x.ActualValue });
         }
 
         private async Task<Db> ReadDb() {

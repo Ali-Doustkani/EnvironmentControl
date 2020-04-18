@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.Services {
@@ -12,5 +13,9 @@ namespace EnvironmentControl.Services {
         Task SaveCoordination(double top, double left);
         Task SaveVariable(Variable variables);
         Task DeleteVariable(string variableName);
+        Task DeleteValue(string variableName, int valueId);
+        Task UpdateValue(int valueId, string newTitle, string newActualValue);
+        Task<int> AddValue(string variableName, string title, string actualValue);
+        Task<IEnumerable<dynamic>> GetValuesOf(string variableName);
     }
 }

@@ -2,14 +2,14 @@
 
 namespace EnvironmentControl.ViewModels {
     public class ValueDeletedMessage : IMessage {
-        public ValueDeletedMessage(string variableName, string title)
+        public ValueDeletedMessage(string variableName, int id)
         {
             VariableName = variableName;
-            Title = title;
+            Id = id;
         }
 
         public string VariableName { get; }
 
-        public string Title { get; }
+        public int Id { get; }
     }
 }

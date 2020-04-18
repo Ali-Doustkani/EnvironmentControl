@@ -1,52 +1,51 @@
 ﻿using EnvironmentControl.Common;
-using EnvironmentControl.Domain;
 using EnvironmentControl.States;
 using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class RadioViewModel : ViewModel, ITypedViewModel {
-        public RadioViewModel(StateManager stateManager, Variable variable, Value value, bool selected) {
+        public RadioViewModel(StateManager stateManager,  bool selected, string variableName, int id, string title, string actualValue) {
             _stateManager = stateManager;
-            _variable = variable;
-            _value = value;
             _selected = selected;
+            VariableName = variableName;
+            _id = id;
+            Title = title;
+            ActualValue = actualValue;
         }
 
         private readonly StateManager _stateManager;
-        private readonly Variable _variable;
-        private Value _value;
+        private readonly int _id;
         private bool _selected;
 
-
-        public string VariableName => _variable.Name;
+        public string VariableName { get; }
 
         public int Type => 1;
 
-        public string Title => _value.Title;
+        public string Title { get; }
 
-        public string ActualValue => _value.ActualValue;
+        public string ActualValue { get; }
 
+        // todo: convert this property to ICommand
         public bool Selected {
             get => _selected;
             set {
                 if (_stateManager.Current.EditStatus == EditStatus.Editing) {
-                    var result = Dialog.ShowValueEditor(_variable.Name, _value);
+                    var result = Dialog.ShowValueEditor(VariableName, _id);
                     if (result.Accepted) {
                         if (result.Status == Common.EditStatus.Edited) {
-                            if (_selected && result["ActualValue"] != _value.ActualValue) {
+                            if (_selected && result["ActualValue"] != ActualValue) {
                                 _selected = false;
                             }
-                            _value = _variable.UpdateValue(_value, result["Title"], result["ActualValue"]);
+                            Service.UpdateValue(_id, result["Title"], result["ActualValue"]).Wait();
                             Notify(nameof(Title), nameof(ActualValue));
                         } else if (result.Status == Common.EditStatus.Deleted) {
-                            Mediator.Publish(new ValueDeletedMessage(_variable.Name, _value.Title));
+                            Mediator.Publish(new ValueDeletedMessage(VariableName, _id));
                         }
-                        Service.SaveVariable(_variable);
                     }
                     return;
                 }
                 if (value)
-                    Service.SetVariable(_variable.Name, _value.ActualValue);
+                    Service.SetVariable(VariableName, ActualValue);
                 _selected = value;
             }
         }
