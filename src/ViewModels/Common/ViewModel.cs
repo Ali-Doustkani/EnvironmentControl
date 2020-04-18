@@ -4,10 +4,11 @@ using EnvironmentControl.Services;
 namespace EnvironmentControl.ViewModels.Common {
     public abstract class ViewModel : INotifyPropertyChanged {
         protected ViewModel() {
-            Mediator = new Mediator();
             Service = new Service(new DataAccessFactory());
             Dialog = new DialogService();
         }
+
+        private static readonly Mediator SingletonMediator = new Mediator();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,6 +25,6 @@ namespace EnvironmentControl.ViewModels.Common {
 
         public IService Service { get; }
 
-        public Mediator Mediator { get; }
+        public Mediator Mediator => SingletonMediator;
     }
 }
