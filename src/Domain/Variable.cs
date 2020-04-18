@@ -27,5 +27,7 @@ namespace EnvironmentControl.Domain {
             Values.Remove(value);
             return newValue;
         }
+
+        public override string ToString() => $"{Name}: {Values.Count} values";
     }
 }

@@ -39,7 +39,7 @@ namespace EnvironmentControl.ViewModels {
                             _value = _variable.UpdateValue(_value, result["Title"], result["ActualValue"]);
                             Notify(nameof(Title), nameof(ActualValue));
                         } else if (result.Status == Common.EditStatus.Deleted) {
-                            Mediator.Publish(new ValueDeletedMessage(_value.Title));
+                            Mediator.Publish(new ValueDeletedMessage(_variable.Name, _value.Title));
                         }
                         Service.SaveVariable(_variable);
                     }

@@ -64,6 +64,9 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private void ValueDeleted(ValueDeletedMessage msg) {
+            if (msg.VariableName != _variable.Name)
+                return;
+
             var toDelete = _variable.Values.Single(x => x.Title == msg.Title);
             _variable.Values.Remove(toDelete);
             FillValues();
