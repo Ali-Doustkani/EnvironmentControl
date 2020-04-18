@@ -8,9 +8,8 @@ using System.Windows;
 
 namespace EnvironmentControl.Common {
     public class DialogService : IDialogService {
-        public DialogResult ShowValueEditor()
-        {
-            var viewModel = new ValueEditorViewModel(false);
+        public DialogResult ShowValueEditor(string variableName) {
+            var viewModel = new ValueEditorViewModel(false, variableName);
             var view = new ValueEditor { DataContext = viewModel };
             var result = view.ShowDialog();
             if (result == true) {
@@ -19,8 +18,8 @@ namespace EnvironmentControl.Common {
             return DialogResult.Failed();
         }
 
-        public DialogResult ShowValueEditor(Value value) {
-            var ctx = new ValueEditorViewModel(true) { Title = value.Title, ActualValue = value.ActualValue };
+        public DialogResult ShowValueEditor(string variableName, Value value) {
+            var ctx = new ValueEditorViewModel(true, variableName, value.Id) { Title = value.Title, ActualValue = value.ActualValue };
             var view = new ValueEditor { DataContext = ctx };
             var result = view.ShowDialog();
             if (result == true) {
@@ -42,13 +41,14 @@ namespace EnvironmentControl.Common {
             return DialogResult.Failed();
         }
 
+        public void Error(string message) => MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
         public void Accept() => CurrentWindow().DialogResult = true;
 
         public void Close() {
             try {
                 CurrentWindow().DialogResult = false;
-            }
-            catch (InvalidOperationException) {
+            } catch (InvalidOperationException) {
                 CurrentWindow().Close();
             }
         }

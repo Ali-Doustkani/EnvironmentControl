@@ -12,7 +12,7 @@ using Xunit;
 namespace EnvironmentControl.Tests.ViewModels {
     public class Tests {
         public Tests() {
-            _main = new MainViewModel(new StateManager() );
+            _main = new MainViewModel(new StateManager());
             _service = new MockService();
             _dialog = Substitute.For<IDialogService>();
             var mediator = new Mediator();
@@ -30,15 +30,17 @@ namespace EnvironmentControl.Tests.ViewModels {
         public void Load_saved_values_on_load() {
             Load();
             _main.Items.Should().HaveCount(2);
-            GetValue(0, 0).Should().BeEquivalentTo(new Value("first", "a"));
-            GetValue(0, 1).Should().BeEquivalentTo(new Value("second", "b"));
+            GetValue(0, 0).Title.Should().Be("first");
+            GetValue(0, 0).ActualValue.Should().Be("a");
+            GetValue(0, 1).Title.Should().Be("second");
+            GetValue(0, 1).ActualValue.Should().Be("b");
         }
 
         [Fact]
         public void Set_environment_variable_when_a_value_is_selected() {
             Load();
             ClickOn(0, 0);
-            _service.GetVariable("myVar").Should().Be("a");
+            _service.GetValueOf("myVar").Should().Be("a");
         }
 
         [Fact]
@@ -56,7 +58,7 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Add_a_new_value_for_a_variable() {
-            _dialog.ShowValueEditor().Returns(DialogResult.Added(
+            _dialog.ShowValueEditor(Arg.Any<string>()).Returns(DialogResult.Added(
                 new Dictionary<string, string>
                 {
                     {"Title", "third" },
@@ -70,12 +72,12 @@ namespace EnvironmentControl.Tests.ViewModels {
             GetValues(0).Should().HaveCount(4);
             Db.Variables.Should().HaveCount(1);
             Db.Variables[0].Values.Should().HaveCount(3);
-            Db.Variables[0].Values.Should().BeEquivalentTo(new Value("first", "a"), new Value("second", "b"), new Value("third", "c"));
+            Db.Variables[0].Values.Should().BeEquivalentTo(new Value(1, "first", "a"), new Value(2, "second", "b"), new Value(3, "third", "c"));
         }
 
         [Fact]
         public void Edit_a_value_of_variable() {
-            _dialog.ShowValueEditor(Arg.Any<Value>()).Returns(DialogResult.Edited(
+            _dialog.ShowValueEditor(Arg.Any<string>(), Arg.Any<Value>()).Returns(DialogResult.Edited(
                 new Dictionary<string, string>
                 {
                     {"Title", "first2" },
@@ -95,7 +97,7 @@ namespace EnvironmentControl.Tests.ViewModels {
 
         [Fact]
         public void Delete_a_value() {
-            _dialog.ShowValueEditor(Arg.Any<Value>()).Returns(DialogResult.Deleted());
+            _dialog.ShowValueEditor(Arg.Any<string>(), Arg.Any<Value>()).Returns(DialogResult.Deleted());
             Load();
 
             _main.Edit.Execute(null);

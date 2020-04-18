@@ -1,11 +1,13 @@
 ﻿namespace EnvironmentControl.Domain {
     public class Value {
-        public Value(string title, string actualValue) {
+        public Value(int id, string title, string actualValue) {
+            Id = id;
             Title = title;
             ActualValue = actualValue;
         }
 
-        public string Title { get;  }
+        public int Id { get; }
+        public string Title { get; }
         public string ActualValue { get; }
     }
 }

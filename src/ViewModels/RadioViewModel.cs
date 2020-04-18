@@ -30,7 +30,7 @@ namespace EnvironmentControl.ViewModels {
             get => _selected;
             set {
                 if (_stateManager.Current.EditStatus == EditStatus.Editing) {
-                    var result = Dialog.ShowValueEditor(_value);
+                    var result = Dialog.ShowValueEditor(_variable.Name, _value);
                     if (result.Accepted) {
                         if (result.Status == Common.EditStatus.Edited) {
                             if (_selected && result["ActualValue"] != _value.ActualValue) {

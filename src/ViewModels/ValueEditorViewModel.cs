@@ -1,18 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using EnvironmentControl.Common;
 
 namespace EnvironmentControl.ViewModels {
     public class ValueEditorViewModel : ViewModel {
-        public ValueEditorViewModel(bool showDelete) {
-            _showDelete = showDelete;
-            Ok = new RelayCommand(Dialog.Accept);
+        public ValueEditorViewModel(bool editing, string variableName, int valueId) {
+            _editing = editing;
+            _variableName = variableName;
+            _valueId = valueId;
+            Ok = new RelayCommand(DoOk);
             Cancel = new RelayCommand(Dialog.Close);
             Delete = new RelayCommand(DoDelete);
         }
 
-        private readonly bool _showDelete;
+        public ValueEditorViewModel(bool editing, string variableName)
+        : this(editing, variableName, -1) { }
+
+        private readonly bool _editing;
+        private readonly string _variableName;
+        private readonly int _valueId;
 
         public ICommand Ok { get; }
 
@@ -22,12 +31,7 @@ namespace EnvironmentControl.ViewModels {
 
         public bool Deleted { get; private set; }
 
-        public Visibility DeleteVisibility => _showDelete ? Visibility.Visible : Visibility.Collapsed;
-
-        private void DoDelete() {
-            Deleted = true;
-            Dialog.Accept();
-        }
+        public Visibility DeleteVisibility => _editing ? Visibility.Visible : Visibility.Collapsed;
 
         public string Title { get; set; }
 
@@ -39,5 +43,37 @@ namespace EnvironmentControl.ViewModels {
                 {nameof(Title), Title},
                 {nameof(ActualValue), ActualValue}
             };
+
+        private void DoDelete() {
+            Deleted = true;
+            Dialog.Accept();
+        }
+
+        private async Task DoOk() {
+            var variable = await Service.GetVariable(_variableName);
+            if (_editing) {
+                if (variable.Values.Any(x => x.Title == Title && x.Id != _valueId)) {
+                    Dialog.Error($"There's already a value with title '{Title}'");
+                    return;
+                }
+
+                if (variable.Values.Any(x => x.ActualValue == ActualValue && x.Id != _valueId)) {
+                    Dialog.Error($"There's already a value like '{ActualValue}'");
+                    return;
+                }
+            } else {
+                if (variable.Values.Any(x => x.Title == Title)) {
+                    Dialog.Error($"There's already a value with title '{Title}'");
+                    return;
+                }
+
+                if (variable.Values.Any(x => x.ActualValue == ActualValue)) {
+                    Dialog.Error($"There's already a value like '{ActualValue}'");
+                    return;
+                }
+            }
+
+            Dialog.Accept();
+        }
     }
 }

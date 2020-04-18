@@ -3,6 +3,7 @@ using EnvironmentControl.Domain;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using EnvironmentControl.States;
@@ -41,25 +42,25 @@ namespace EnvironmentControl.ViewModels {
 
         private void FillValues() {
             var list = new List<ITypedViewModel>();
-            var selectedValue = Service.GetVariable(_variable.Name);
+            var selectedValue = Service.GetValueOf(_variable.Name);
             RadioViewModel CreateRadio(Value x) {
                 var ret = new RadioViewModel(_stateManager, _variable, x, x.ActualValue == selectedValue);
                 return ret;
             }
             list.AddRange(_variable.Values.Select(CreateRadio));
-            list.Add(new ButtonViewModel(_stateManager, AddButtonClicked));
+            list.Add(new ButtonViewModel(_stateManager, async () => await AddButtonClicked()));
             _values = new ObservableCollection<ITypedViewModel>(list);
             Notify(nameof(Values));
         }
 
-        private void AddButtonClicked() {
-            var result = Dialog.ShowValueEditor();
+        private async Task AddButtonClicked() {
+            var result = Dialog.ShowValueEditor(_variable.Name);
             if (result.Accepted) {
-                var newValue = new Value(result["Title"], result["ActualValue"]);
+                var newValue = await Service.CreateValue(_variable, result["Title"], result["ActualValue"]);
                 var item = new RadioViewModel(_stateManager, _variable, newValue, false);
                 _variable.Values.Add(newValue);
                 _values.Insert(_values.Count - 1, item);
-                Service.SaveVariable(_variable);
+                await Service.SaveVariable(_variable);
             }
         }
 

@@ -8,12 +8,23 @@ using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.Services {
     public class Service : IService {
+        public async Task<Value> CreateValue(Variable variable, string title, string actualValue) {
+            var db = await ReadDb();
+            var newid = db.Variables.Single(x => x.Name == variable.Name).Values.Max(x => x.Id) + 1;
+            return new Value(newid, title, actualValue);
+        }
+
         public void SetVariable(string name, string value) {
             Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
         }
 
-        public string GetVariable(string name) {
-            return Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Machine);
+        public string GetValueOf(string variableName) {
+            return Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+        }
+
+        public async Task<Variable> GetVariable(string variableName) {
+            var db = await ReadDb();
+            return db.Variables.Single(x => x.Name == variableName);
         }
 
         public WindowsVariable[] GetVariables() {
@@ -36,8 +47,7 @@ namespace EnvironmentControl.Services {
             try {
                 var db = await ReadDb();
                 return LoadResult.Successful(db.Variables, db.Top, db.Left);
-            }
-            catch (FileNotFoundException) {
+            } catch (FileNotFoundException) {
                 return LoadResult.Failure("Db file not found!");
             }
         }
@@ -54,8 +64,7 @@ namespace EnvironmentControl.Services {
             var existing = db.Variables.SingleOrDefault(x => x.Name == variable.Name);
             if (existing == null) {
                 db.Variables.Add(variable);
-            }
-            else {
+            } else {
                 db.Variables.Insert(db.Variables.IndexOf(existing), variable);
                 db.Variables.Remove(existing);
             }

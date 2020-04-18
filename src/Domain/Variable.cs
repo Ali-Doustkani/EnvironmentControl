@@ -16,13 +16,13 @@ namespace EnvironmentControl.Domain {
 
         public List<Value> Values { get; }
 
-        public void AddValue(string title, string actualValue) {
-            var newValue = new Value(title, actualValue);
+        public void AddValue(int id, string title, string actualValue) {
+            var newValue = new Value(id, title, actualValue);
             Values.Add(newValue);
         }
 
         public Value UpdateValue(Value value, string title, string actualValue) {
-            var newValue = new Value(title, actualValue);
+            var newValue = new Value(value.Id, title, actualValue);
             Values.Insert(Values.IndexOf(value), newValue);
             Values.Remove(value);
             return newValue;

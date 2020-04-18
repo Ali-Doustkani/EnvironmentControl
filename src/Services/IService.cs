@@ -3,8 +3,10 @@ using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.Services {
     public interface IService {
+        Task<Value> CreateValue(Variable variable, string title, string actualValue);
         void SetVariable(string name, string value);
-        string GetVariable(string name);
+        string GetValueOf(string variableName);
+        Task<Variable> GetVariable(string variableName);
         WindowsVariable[] GetVariables();
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);

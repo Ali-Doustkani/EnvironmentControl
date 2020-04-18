@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EnvironmentControl.Services {
+﻿namespace EnvironmentControl.Services {
     public class WindowsVariable {
         public WindowsVariable(Type type, string name) {
             Type = type;
