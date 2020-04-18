@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using EnvironmentControl.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using EnvironmentControl.Common;
 
 namespace EnvironmentControl.ViewModels {
     public class ValueEditorViewModel : ViewModel {
@@ -60,25 +59,17 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private async Task DoOk() {
-            var variable = await Service.GetVariable(_variableName); //todo: cant access domain
             if (_editing) {
-                if (variable.Values.Any(x => x.Title == Title && x.Id != _valueId)) {
-                    Dialog.Error($"There's already a value with title '{Title}'");
+                var result = await Service.UpdateValue(_variableName, _valueId, Title, ActualValue);
+                if (!result.Succeeded) {
+                    Dialog.Error(result.Message);
                     return;
                 }
 
-                if (variable.Values.Any(x => x.ActualValue == ActualValue && x.Id != _valueId)) {
-                    Dialog.Error($"There's already a value like '{ActualValue}'");
-                    return;
-                }
             } else {
-                if (variable.Values.Any(x => x.Title == Title)) {
-                    Dialog.Error($"There's already a value with title '{Title}'");
-                    return;
-                }
-
-                if (variable.Values.Any(x => x.ActualValue == ActualValue)) {
-                    Dialog.Error($"There's already a value like '{ActualValue}'");
+                var result = await Service.AddValue(_variableName, Title, ActualValue);
+                if (!result.Succeeded) {
+                    Dialog.Error(result.Message);
                     return;
                 }
             }

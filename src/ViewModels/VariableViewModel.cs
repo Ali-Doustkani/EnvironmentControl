@@ -50,9 +50,7 @@ namespace EnvironmentControl.ViewModels {
         private async Task AddButtonClicked() {
             var result = Dialog.ShowValueEditor(Name);
             if (result.Accepted) {
-                var id = await Service.AddValue(Name, result["Title"], result["ActualValue"]);
-                var item = new RadioViewModel(_stateManager, false, Name, id, result["Title"], result["ActualValue"]);
-                Values.Insert(Values.Count - 1, item);
+                await FillValues();
             }
         }
 

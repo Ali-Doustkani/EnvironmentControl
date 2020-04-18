@@ -65,17 +65,20 @@ namespace EnvironmentControl.Services {
             await access.SaveChanges();
         }
 
-        public async Task UpdateValue(string variableName, int valueId, string newTitle, string newActualValue) {
+        public async Task<UpdateResult> UpdateValue(string variableName, int valueId, string newTitle, string newActualValue) {
             var access = await _factory.Create();
-            access.Db.Environment.Find(variableName).UpdateValue(valueId, newTitle, newActualValue);
-            await access.SaveChanges();
+            var result = access.Db.Environment.Find(variableName).UpdateValue(valueId, newTitle, newActualValue);
+            if (result.Succeeded)
+                await access.SaveChanges();
+            return result;
         }
 
-        public async Task<int> AddValue(string variableName, string title, string actualValue) {
+        public async Task<AddResult> AddValue(string variableName, string title, string actualValue) {
             var access = await _factory.Create();
-            var id = await access.Db.Environment.Find(variableName).AddValue(new IdGenerator(_factory), title, actualValue);
-            await access.SaveChanges();
-            return id;
+            var result = await access.Db.Environment.Find(variableName).AddValue(new IdGenerator(_factory), title, actualValue);
+            if (result.Succeeded)
+                await access.SaveChanges();
+            return result;
         }
 
         public async Task<IEnumerable<dynamic>> GetValuesOf(string variableName) {

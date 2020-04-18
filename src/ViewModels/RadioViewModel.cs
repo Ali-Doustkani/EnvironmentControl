@@ -51,7 +51,6 @@ namespace EnvironmentControl.ViewModels {
                     if (_selected && result["ActualValue"] != ActualValue) {
                         _selected = false;
                     }
-                    Service.UpdateValue(VariableName, _id, result["Title"], result["ActualValue"]).Wait();
                     Title = result["Title"];
                     ActualValue = result["ActualValue"];
                     Notify(nameof(Title), nameof(ActualValue));

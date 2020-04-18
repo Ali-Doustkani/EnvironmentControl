@@ -26,19 +26,27 @@ namespace EnvironmentControl.Domain {
 
         public Value[] Values => _values.ToArray();
 
-        public async Task<int> AddValue(IIdGenerator idGenerator, string title, string actualValue) {
+        public async Task<AddResult> AddValue(IIdGenerator idGenerator, string title, string actualValue) {
+            if (_values.Any(x => x.Title == title))
+                return AddResult.Failed($"There's already a value with title '{title}'");
+            if (_values.Any(x => x.ActualValue == actualValue))
+                return AddResult.Failed($"There's already a value like '{actualValue}'");
             var newid = await idGenerator.Generate(Name);
             var newValue = new Value(newid, title, actualValue);
             _values.Add(newValue);
-            return newid;
+            return AddResult.Success(newid);
         }
 
-        public void UpdateValue(int id, string title, string actualValue) {
-            // todo: domain logics
+        public UpdateResult UpdateValue(int id, string title, string actualValue) {
+            if (_values.Any(x => x.Id != id && x.Title == title))
+                return UpdateResult.Failed($"There's already a value with title '{title}'");
+            if (_values.Any(x => x.Id != id && x.ActualValue == actualValue))
+                return UpdateResult.Failed($"There's already a value like '{actualValue}'");
             var oldValue = Values.Single(x => x.Id == id);
             var newValue = new Value(id, title, actualValue);
             _values.Insert(_values.IndexOf(oldValue), newValue);
             _values.Remove(oldValue);
+            return UpdateResult.Success();
         }
 
         public void RemoveValue(int id) {

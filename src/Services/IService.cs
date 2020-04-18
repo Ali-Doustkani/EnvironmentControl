@@ -4,18 +4,15 @@ using EnvironmentControl.Domain;
 
 namespace EnvironmentControl.Services {
     public interface IService {
-      
         void SetVariable(string name, string value);
         string GetValueOf(string variableName);
-        Task<Variable> GetVariable(string variableName);
         WindowsVariable[] GetVariables();
         Task<LoadResult> Load();
         Task SaveCoordination(double top, double left);
-     
         Task DeleteVariable(string variableName);
         Task DeleteValue(string variableName, int valueId);
-        Task UpdateValue(string variableName, int valueId, string newTitle, string newActualValue);
-        Task<int> AddValue(string variableName, string title, string actualValue);
+        Task<UpdateResult> UpdateValue(string variableName, int valueId, string newTitle, string newActualValue);
+        Task<AddResult> AddValue(string variableName, string title, string actualValue);
         Task<IEnumerable<dynamic>> GetValuesOf(string variableName);
         Task<dynamic> GetValue(string variableName, int id);
         Task AddVariable(string name);
