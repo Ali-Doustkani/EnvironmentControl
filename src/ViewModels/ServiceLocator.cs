@@ -21,7 +21,7 @@ namespace EnvironmentControl.ViewModels {
 
         private IService _service;
         public IService Service {
-            get => _service ??= new Service();
+            get => _service ??= new Service(new DataAccessFactory());
             set => _service = value;
         }
 

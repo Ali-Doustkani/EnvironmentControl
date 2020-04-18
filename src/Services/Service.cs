@@ -1,42 +1,38 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using EnvironmentControl.Domain;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EnvironmentControl.Domain;
-using EnvironmentControl.ViewModels;
 
 namespace EnvironmentControl.Services {
     public class Service : IService {
-        public async Task<Value> CreateValue(Variable variable, string title, string actualValue) {
-            var db = await ReadDb();
-            var newid = db.Variables.Single(x => x.Name == variable.Name).Values.Max(x => x.Id) + 1;
-            return new Value(newid, title, actualValue);
+
+        public Service(IDataAccessFactory factory) {
+            _factory = factory;
         }
 
+        private readonly IDataAccessFactory _factory;
+
         public void SetVariable(string name, string value) {
-            Environment.SetEnvironmentVariable(name, value, EnvironmentVariableTarget.Machine);
+            System.Environment.SetEnvironmentVariable(name, value, System.EnvironmentVariableTarget.Machine);
         }
 
         public string GetValueOf(string variableName) {
-            return Environment.GetEnvironmentVariable(variableName, EnvironmentVariableTarget.Machine);
+            return System.Environment.GetEnvironmentVariable(variableName, System.EnvironmentVariableTarget.Machine);
         }
 
         public async Task<Variable> GetVariable(string variableName) {
-            var db = await ReadDb();
-            return db.Variables.Single(x => x.Name == variableName);
+            var access = await _factory.Create();
+            return access.Db.Environment.Find(variableName);
         }
 
         public WindowsVariable[] GetVariables() {
-            var ret = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User)
+            var ret = System.Environment.GetEnvironmentVariables(System.EnvironmentVariableTarget.User)
                 .Keys
                 .Cast<string>()
                 .OrderBy(x => x)
                 .Select(x => new WindowsVariable(Type.User, x))
                 .ToList();
-            ret.AddRange(Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine)
+            ret.AddRange(System.Environment.GetEnvironmentVariables(System.EnvironmentVariableTarget.Machine)
                 .Keys
                 .Cast<string>()
                 .OrderBy(x => x)
@@ -46,94 +42,58 @@ namespace EnvironmentControl.Services {
         }
 
         public async Task<LoadResult> Load() {
-            try {
-                var db = await ReadDb();
-                return LoadResult.Successful(db.Variables, db.Top, db.Left);
-            } catch (FileNotFoundException) {
-                return LoadResult.Failure("Db file not found!");
-            }
+            var access = await _factory.Create();
+            return LoadResult.Successful(access.Db.Environment.Variables, access.Db.Top, access.Db.Left);
         }
 
         public async Task SaveCoordination(double top, double left) {
-            var db = await ReadDb();
-            db.Top = top;
-            db.Left = left;
-            await WriteDb(db);
-        }
-
-        public async Task SaveVariable(Variable variable) {
-            var db = await ReadDb();
-            var existing = db.Variables.SingleOrDefault(x => x.Name == variable.Name);
-            if (existing == null) {
-                db.Variables.Add(variable);
-            } else {
-                db.Variables.Insert(db.Variables.IndexOf(existing), variable);
-                db.Variables.Remove(existing);
-            }
-            await WriteDb(db);
+            var access = await _factory.Create();
+            access.Db.Top = top;
+            access.Db.Left = left;
+            await access.SaveChanges();
         }
 
         public async Task DeleteVariable(string variableName) {
-            var db = await ReadDb();
-            var toDelete = db.Variables.Single(x => x.Name == variableName);
-            db.Variables.Remove(toDelete);
-            await WriteDb(db);
+            var access = await _factory.Create();
+            access.Db.Environment.Remove(variableName);
+            await access.SaveChanges();
         }
 
         public async Task DeleteValue(string variableName, int valueId) {
-            var db = await ReadDb();
-            var variable = db.Variables.Single(x => x.Name == variableName);
-            var toDelete = variable.Values.Single(x => x.Id == valueId);
-            variable.Values.Remove(toDelete);
-            await SaveVariable(variable);
+            var access = await _factory.Create();
+            access.Db.Environment.Find(variableName).RemoveValue(valueId);
+            await access.SaveChanges();
         }
 
         public async Task UpdateValue(string variableName, int valueId, string newTitle, string newActualValue) {
-            var db = await ReadDb();
-            var variable = db.Variables.Single(x => x.Name == variableName);
-            variable.UpdateValue(valueId, newTitle, newActualValue);
-            await SaveVariable(variable);
+            var access = await _factory.Create();
+            access.Db.Environment.Find(variableName).UpdateValue(valueId, newTitle, newActualValue);
+            await access.SaveChanges();
         }
 
         public async Task<int> AddValue(string variableName, string title, string actualValue) {
-            var db = await ReadDb();
-            var variable = db.Variables.Single(x => x.Name == variableName);
-            var newValue = await CreateValue(variable, title, actualValue);
-            variable.Values.Add(newValue);
-            await SaveVariable(variable);
-            return newValue.Id;
+            var access = await _factory.Create();
+            var id = await access.Db.Environment.Find(variableName).AddValue(new IdGenerator(_factory), title, actualValue);
+            await access.SaveChanges();
+            return id;
         }
 
         public async Task<IEnumerable<dynamic>> GetValuesOf(string variableName) {
-            var db = await ReadDb();
-            return db
-                .Variables
-                .Single(x => x.Name == variableName)
+            var access = await _factory.Create();
+            return access.Db
+                .Environment
+                .Find(variableName)
                 .Values
                 .Select(x => new { x.Id, x.Title, x.ActualValue });
         }
 
-        public async Task<dynamic> GetValue(string variableName, int id) {
-            var db = await ReadDb();
-            return db.Variables.Single(x => x.Name == variableName).Values.Single(x => x.Id == id);
-        }
+        public async Task<dynamic> GetValue(string variableName, int id) =>
+            (await _factory.Create()).Db.Environment.FindValue(variableName, id);
 
         public async Task AddVariable(string name) {
-            var newVariable = new Variable(name);
-            newVariable.AddValue(1, "Default", GetValueOf(name));
-            await SaveVariable(newVariable);
-        }
-
-        private async Task<Db> ReadDb() {
-            if (!File.Exists("db.json"))
-                return new Db(0, 0, new List<Variable>());
-            string json = await File.ReadAllTextAsync("db.json");
-            return JsonConvert.DeserializeObject<Db>(json);
-        }
-
-        private async Task WriteDb(Db db) {
-            string output = JsonConvert.SerializeObject(db, Formatting.Indented);
-            await File.WriteAllTextAsync("db.json", output);
+            var access = await _factory.Create();
+            access.Db.Environment.Add(name, GetValueOf(name));
+            await access.SaveChanges();
         }
     }
 }

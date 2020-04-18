@@ -1,5 +1,7 @@
-﻿namespace EnvironmentControl.Domain {
+﻿using System.Threading.Tasks;
+
+namespace EnvironmentControl.Domain {
     public interface IIdGenerator {
-        int Generate();
+        Task<int> Generate(string variableName);
     }
 }

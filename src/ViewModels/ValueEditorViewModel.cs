@@ -60,7 +60,7 @@ namespace EnvironmentControl.ViewModels {
         }
 
         private async Task DoOk() {
-            var variable = await Service.GetVariable(_variableName);
+            var variable = await Service.GetVariable(_variableName); //todo: cant access domain
             if (_editing) {
                 if (variable.Values.Any(x => x.Title == Title && x.Id != _valueId)) {
                     Dialog.Error($"There's already a value with title '{Title}'");
