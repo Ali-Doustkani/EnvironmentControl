@@ -7,7 +7,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         Padding="10"
-        Width="300"
+        Width="350"
         SizeToContent="Height"
         MouseDown="MainWindow_OnMouseDown"
         Loaded="MainWindow_OnLoaded" 

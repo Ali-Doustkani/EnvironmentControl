@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="AppBackground" Color="#ecf0f1" Opacity="0.9"/>
+    <SolidColorBrush x:Key="AppBackground" Color="#ecf0f1"/>
     <SolidColorBrush x:Key="AppBorderColor" Color="#34495e" Opacity="0.1"/>
     <SolidColorBrush x:Key="ValueBackground" Color="#3498db" Opacity="0.05"/>
     <SolidColorBrush x:Key="ValueBackgroundOnSelection" Color="#ecf0f1"/>

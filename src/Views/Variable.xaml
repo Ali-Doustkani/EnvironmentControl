@@ -5,7 +5,7 @@
              Loaded="OnLoaded">
     <UserControl.Resources>
         <DataTemplate x:Key="SelectionValue">
-            <RadioButton GroupName="{Binding VariableName}" IsChecked="{Binding Selected}" Command="{Binding SelectValue}">
+            <RadioButton GroupName="{Binding VariableName}" IsChecked="{Binding Selected}" Command="{Binding SelectValue}" MaxWidth="150">
                 <RadioButton.Template>
                     <ControlTemplate TargetType="RadioButton">
                         <Border Name="Border" Padding="9" CornerRadius="3" Background="{StaticResource ValueBackground}">
