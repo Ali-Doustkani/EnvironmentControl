@@ -4,7 +4,7 @@ using EditStatus = EnvironmentControl.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class RadioViewModel : ViewModel, ITypedViewModel {
-        public RadioViewModel(StateManager stateManager,  bool selected, string variableName, int id, string title, string actualValue) {
+        public RadioViewModel(StateManager stateManager, bool selected, string variableName, int id, string title, string actualValue) {
             _stateManager = stateManager;
             _selected = selected;
             VariableName = variableName;
@@ -21,9 +21,9 @@ namespace EnvironmentControl.ViewModels {
 
         public int Type => 1;
 
-        public string Title { get; }
+        public string Title { get; private set; }
 
-        public string ActualValue { get; }
+        public string ActualValue { get; private set; }
 
         // todo: convert this property to ICommand
         public bool Selected {
@@ -36,7 +36,9 @@ namespace EnvironmentControl.ViewModels {
                             if (_selected && result["ActualValue"] != ActualValue) {
                                 _selected = false;
                             }
-                            Service.UpdateValue(_id, result["Title"], result["ActualValue"]).Wait();
+                            Service.UpdateValue(VariableName, _id, result["Title"], result["ActualValue"]).Wait();
+                            Title = result["Title"];
+                            ActualValue = result["ActualValue"];
                             Notify(nameof(Title), nameof(ActualValue));
                         } else if (result.Status == Common.EditStatus.Deleted) {
                             Mediator.Publish(new ValueDeletedMessage(VariableName, _id));

@@ -87,8 +87,11 @@ namespace EnvironmentControl.Services {
             await SaveVariable(variable);
         }
 
-        public Task UpdateValue(int valueId, string newTitle, string newActualValue) {
-            throw new NotImplementedException();
+        public async Task UpdateValue(string variableName, int valueId, string newTitle, string newActualValue) {
+            var db = await ReadDb();
+            var variable = db.Variables.Single(x => x.Name == variableName);
+            variable.UpdateValue(valueId, newTitle, newActualValue);
+            await SaveVariable(variable);
         }
 
         public async Task<int> AddValue(string variableName, string title, string actualValue) {
@@ -107,6 +110,11 @@ namespace EnvironmentControl.Services {
                 .Single(x => x.Name == variableName)
                 .Values
                 .Select(x => new { x.Id, x.Title, x.ActualValue });
+        }
+
+        public async Task<dynamic> GetValue(string variableName, int id) {
+            var db = await ReadDb();
+            return db.Variables.Single(x => x.Name == variableName).Values.Single(x => x.Id == id);
         }
 
         private async Task<Db> ReadDb() {

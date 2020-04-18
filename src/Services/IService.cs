@@ -14,8 +14,9 @@ namespace EnvironmentControl.Services {
         Task SaveVariable(Variable variables);
         Task DeleteVariable(string variableName);
         Task DeleteValue(string variableName, int valueId);
-        Task UpdateValue(int valueId, string newTitle, string newActualValue);
+        Task UpdateValue(string variableName, int valueId, string newTitle, string newActualValue);
         Task<int> AddValue(string variableName, string title, string actualValue);
         Task<IEnumerable<dynamic>> GetValuesOf(string variableName);
+        Task<dynamic> GetValue(string variableName, int id);
     }
 }

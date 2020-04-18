@@ -37,6 +37,16 @@ namespace EnvironmentControl.ViewModels {
 
         public string ActualValue { get; set; }
 
+        public async Task Load() {
+            if (!_editing)
+                return;
+
+            var value = await Service.GetValue(_variableName, _valueId);
+            Title = value.Title;
+            ActualValue = value.ActualValue;
+            Notify(nameof(Title), nameof(ActualValue));
+        }
+
         public Dictionary<string, string> ToDictionary() =>
             new Dictionary<string, string>
             {

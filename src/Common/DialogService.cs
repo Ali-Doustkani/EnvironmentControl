@@ -19,8 +19,7 @@ namespace EnvironmentControl.Common {
         }
 
         public DialogResult ShowValueEditor(string variableName, int valueId) {
-            //todo: load value title and actual value from db
-            var ctx = new ValueEditorViewModel(true, variableName, valueId) { Title = "value.Title", ActualValue = "value.ActualValue" };
+            var ctx = new ValueEditorViewModel(true, variableName, valueId);
             var view = new ValueEditor { DataContext = ctx };
             var result = view.ShowDialog();
             if (result == true) {

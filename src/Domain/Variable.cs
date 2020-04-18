@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EnvironmentControl.Domain {
     public class Variable {
@@ -21,10 +22,11 @@ namespace EnvironmentControl.Domain {
             Values.Add(newValue);
         }
 
-        public Value UpdateValue(Value value, string title, string actualValue) {
-            var newValue = new Value(value.Id, title, actualValue);
-            Values.Insert(Values.IndexOf(value), newValue);
-            Values.Remove(value);
+        public Value UpdateValue(int id, string title, string actualValue) {
+            var oldValue = Values.Single(x => x.Id == id);
+            var newValue = new Value(id, title, actualValue);
+            Values.Insert(Values.IndexOf(oldValue), newValue);
+            Values.Remove(oldValue);
             return newValue;
         }
 
