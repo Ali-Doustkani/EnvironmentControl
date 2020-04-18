@@ -1,4 +1,4 @@
-﻿using EnvironmentControl.Common;
+﻿using EnvironmentControl.ViewModels.Common;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableDeletedMessage : IMessage {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace EnvironmentControl.Common {
+namespace EnvironmentControl.ViewModels.Common {
     public class RelayCommand : ICommand {
         public RelayCommand(Func<Task> asyncTodo) {
             _asyncTodo = asyncTodo;

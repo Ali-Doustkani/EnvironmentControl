@@ -2,7 +2,7 @@
 using System.Windows;
 using EnvironmentControl.ViewModels;
 using System.Windows.Input;
-using EnvironmentControl.States;
+using EnvironmentControl.ViewModels.States;
 
 namespace EnvironmentControl.Views {
     public partial class MainWindow {

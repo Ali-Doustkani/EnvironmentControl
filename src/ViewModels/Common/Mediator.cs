@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EnvironmentControl.Common {
+namespace EnvironmentControl.ViewModels.Common {
     public class Mediator {
         public Mediator() {
             _handlers = new List<Tuple<Type, object>>();

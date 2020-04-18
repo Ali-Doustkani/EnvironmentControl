@@ -1,4 +1,4 @@
-﻿namespace EnvironmentControl.Common {
+﻿namespace EnvironmentControl.ViewModels.Common {
     public interface IDialogService {
         DialogResult ShowValueEditor(string variableName);
         DialogResult ShowValueEditor(string variableName, int valueId);

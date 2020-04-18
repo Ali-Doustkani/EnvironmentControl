@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EnvironmentControl.States {
+namespace EnvironmentControl.ViewModels.States {
     public class StateManager {
         private AppState _current;
 

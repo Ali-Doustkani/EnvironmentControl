@@ -1,6 +1,6 @@
-﻿using EnvironmentControl.Common;
-using EnvironmentControl.Services;
-using EnvironmentControl.States;
+﻿using EnvironmentControl.Services;
+using EnvironmentControl.ViewModels.Common;
+using EnvironmentControl.ViewModels.States;
 
 namespace EnvironmentControl.ViewModels {
     public interface IServiceLocator {

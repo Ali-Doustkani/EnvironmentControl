@@ -1,10 +1,10 @@
-﻿using EnvironmentControl.Common;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using EnvironmentControl.States;
-using EditStatus = EnvironmentControl.States.EditStatus;
+using EnvironmentControl.ViewModels.Common;
+using EnvironmentControl.ViewModels.States;
+using EditStatus = EnvironmentControl.ViewModels.States.EditStatus;
 
 namespace EnvironmentControl.ViewModels {
     public class ButtonViewModel : ViewModel, ITypedViewModel {

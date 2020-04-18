@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel;
 using EnvironmentControl.Services;
-using EnvironmentControl.ViewModels;
 
-namespace EnvironmentControl.Common {
+namespace EnvironmentControl.ViewModels.Common {
     public abstract class ViewModel : INotifyPropertyChanged {
+        protected ViewModel() {
+            Mediator = new Mediator();
+            Service = new Service(new DataAccessFactory());
+            Dialog = new DialogService();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void Notify(params string[] properties) {
@@ -15,10 +20,10 @@ namespace EnvironmentControl.Common {
             }
         }
 
-        public IDialogService Dialog => ServiceLocator.Instance.Dialog;
+        public IDialogService Dialog { get; }
 
-        public IService Service => ServiceLocator.Instance.Service;
+        public IService Service { get; }
 
-        public Mediator Mediator => ServiceLocator.Instance.Mediator;
+        public Mediator Mediator { get; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace EnvironmentControl.States {
+﻿namespace EnvironmentControl.ViewModels.States {
     public class AppState {
         public AppState(EditStatus editStatus) {
             EditStatus = editStatus;

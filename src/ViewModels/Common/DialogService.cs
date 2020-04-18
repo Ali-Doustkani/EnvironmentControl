@@ -1,11 +1,10 @@
-﻿using EnvironmentControl.ViewModels;
-using EnvironmentControl.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using EnvironmentControl.Views;
 
-namespace EnvironmentControl.Common {
+namespace EnvironmentControl.ViewModels.Common {
     public class DialogService : IDialogService {
         public DialogResult ShowValueEditor(string variableName) {
             var viewModel = new ValueEditorViewModel(false, variableName);

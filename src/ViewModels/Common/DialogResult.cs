@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EnvironmentControl.Common {
+namespace EnvironmentControl.ViewModels.Common {
     public class DialogResult {
         private DialogResult(bool accepted, EditStatus status, Dictionary<string, string> values) {
             Accepted = accepted;

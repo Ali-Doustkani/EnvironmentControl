@@ -1,6 +1,6 @@
-﻿using EnvironmentControl.Common;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using EnvironmentControl.Services;
+using EnvironmentControl.ViewModels.Common;
 
 namespace EnvironmentControl.ViewModels {
     public class VariableSelectorViewModel : ViewModel {
